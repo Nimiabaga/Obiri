@@ -150,6 +150,8 @@ header::after{
 
 /* ...existing code... */
 
+/* ...existing code... */
+
 /* ================== GRID ================== */
 .food-grid {
   display: flex;
@@ -273,7 +275,7 @@ header::after{
   }
 }
 
-/* ...existing code... */
+
 /* ================== BOTTOM NAV ================== */
 .bottom-nav{
   position:fixed; left:0; right:0; bottom:0; z-index:10;
