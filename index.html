@@ -58,15 +58,6 @@
             <p>₦25,000</p>
           </div>
         </div>
-
-        <!-- 5) Grilled Catfish (BBQ highlight) -->
-        <div class="food-card">
-          <img src="images/obiri-grilled-catfish.jpg" alt="Grilled Catfish with coleslaw and fries" />
-          <div class="food-info">
-            <h4>Grilled Catfish<br><small>(Charcoal • Coleslaw • Fries)</small></h4>
-            <p>₦20,000</p>
-          </div>
-        </div>
       </div>
     </section>
   </main>
@@ -81,6 +72,7 @@
 
   <!-- Interactive gradient effect script -->
   <script>
+    // Add interactive hover effect to food cards
     document.querySelectorAll(".food-card").forEach(card => {
       card.addEventListener("mousemove", e => {
         const rect = card.getBoundingClientRect();
