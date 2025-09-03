@@ -8,12 +8,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
 <body>
-  <!-- Header (logo + tiny tag) -->
+  <!-- Header (logo only; "RESTAURANT • LOUNGE" tag is via CSS) -->
   <header class="animate__animated animate__fadeInDown">
-    <div class="brand">
-      <img src="images/obiri.png" alt="OBÍRÍ Kitchen & Bar Logo" class="logo" />
-      
-    </div>
+    <img src="images/obiri.png" alt="OBÍRÍ Restaurant & Lounge Logo" class="logo" />
   </header>
 
   <main>
@@ -22,46 +19,52 @@
         <h2>MENU</h2>
       </div>
 
-      <!-- Featured -->
-     
-
+      <!-- OBÍRÍ SPECIAL (visually styled/centered via CSS) -->
+      <h2 style="text-align:center;">🍽️ OBÍRÍ SPECIAL</h2>
 
       <div class="food-grid">
-        <!-- Maximus Special Rice -->
+        <!-- 1) Ikwerre Okazi -->
         <div class="food-card">
-          <img src="images/maximus-special-rice.jpg" alt="Maximus Special Rice" />
+          <img src="images/obiri-ikwerre-okazi.jpg" alt="Ikwerre Okazi (Mini-Wiri Okazi)" />
           <div class="food-info">
-            <h4>Maximus Special Rice</h4>
-            <p>₦6,000</p>
+            <h4>Ikwerre Okazi<br><small>(Mini-Wiri Okazi)</small></h4>
+            <p>₦25,000</p>
           </div>
         </div>
 
-        <!-- Maximus Special Burger (Chicken & Chips) -->
+        <!-- 2) Fisherman Soup -->
         <div class="food-card">
-          <img src="images/maximus-chicken-chips.jpg" alt="Maximus Special Burger with Chicken & Chips" />
+          <img src="images/obiri-fisherman-soup.jpg" alt="Fisherman Soup with Red Snapper Head" />
           <div class="food-info">
-            <h4>Maximus Special Burger<br><small>(Chicken &amp; Chips)</small></h4>
-            <p>₦10,000</p>
+            <h4>Fisherman Soup<br><small>(Red Snapper Head)</small></h4>
+            <p>₦35,000</p>
           </div>
         </div>
 
-        <!-- Platter Maximus -->
+        <!-- 3) Seafood Okra — Head -->
         <div class="food-card">
-          <img src="images/platter-maximus.jpg" alt="Platter Maximus" />
+          <img src="images/obiri-seafood-okra-head.jpg" alt="Seafood Okra with Red Snapper (Head, fresh/dried)" />
           <div class="food-info">
-            <h4>Platter Maximus<br>
-              <small>(Peppered turkey, snails, gizzard, prawns, chicken wings, yam/potato chips)</small>
-            </h4>
-            <p>₦55,000</p>
+            <h4>Seafood Okra<br><small>(Red Snapper — Head)</small></h4>
+            <p>₦30,000</p>
           </div>
         </div>
 
-        <!-- Maximus Salad -->
+        <!-- 4) Seafood Okra — Middle tail -->
         <div class="food-card">
-          <img src="images/maximus-salad.jpg" alt="Maximus Salad" />
+          <img src="images/obiri-seafood-okra-middle-tail.jpg" alt="Seafood Okra with Red Snapper (Middle tail)" />
           <div class="food-info">
-            <h4>Maximus Salad</h4>
-            <p>₦15,000</p>
+            <h4>Seafood Okra<br><small>(Red Snapper — Middle tail)</small></h4>
+            <p>₦25,000</p>
+          </div>
+        </div>
+
+        <!-- 5) Grilled Catfish (BBQ highlight) -->
+        <div class="food-card">
+          <img src="images/obiri-grilled-catfish.jpg" alt="Grilled Catfish with coleslaw and fries" />
+          <div class="food-info">
+            <h4>Grilled Catfish<br><small>(Charcoal • Coleslaw • Fries)</small></h4>
+            <p>₦20,000</p>
           </div>
         </div>
       </div>
@@ -75,5 +78,16 @@
     <a href="./drinks.html">Drinks</a>
     <a href="./contact.html">Contact</a>
   </nav>
+
+  <!-- Interactive gradient effect script -->
+  <script>
+    document.querySelectorAll(".food-card").forEach(card => {
+      card.addEventListener("mousemove", e => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+        card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+      });
+    });
+  </script>
 </body>
 </html>
