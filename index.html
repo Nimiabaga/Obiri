@@ -14,17 +14,18 @@
   </header>
 
   <main>
-    <section class="section active">
-      <div class="menu-banner">
-        <h2>MENU</h2>
-      </div>
+    <!-- Menu banner -->
+    <div class="menu-banner">
+      <h2>MENU</h2>
+    </div>
 
-      <!-- OBÍRÍ SPECIAL (visually styled/centered via CSS) -->
-      <h2 style="text-align:center;">🍽️ OBÍRÍ SPECIAL</h2>
+    <!-- OBÍRÍ SPECIAL (home) -->
+    <section class="section active" aria-labelledby="obiri-special-title">
+      <h3 id="obiri-special-title" class="hero-title" style="text-align:center; margin:0 0 1rem;">OBÍRÍ SPECIAL</h3>
 
       <div class="food-grid">
         <!-- 1) Ikwerre Okazi -->
-        <div class="food-card">
+        <div class="food-card" tabindex="0">
           <img src="images/obiri-ikwerre-okazi.jpg" alt="Ikwerre Okazi (Mini-Wiri Okazi)" />
           <div class="food-info">
             <h4>Ikwerre Okazi<br><small>(Mini-Wiri Okazi)</small></h4>
@@ -32,30 +33,30 @@
           </div>
         </div>
 
-        <!-- 2) Fisherman Soup -->
-        <div class="food-card">
-          <img src="images/obiri-fisherman-soup.jpg" alt="Fisherman Soup with Red Snapper Head" />
+        <!-- 2) Fisherman Soup — Head -->
+        <div class="food-card" tabindex="0">
+          <img src="images/obiri-fisherman-soup-head.jpg" alt="Fisherman Soup with Red Snapper Head" />
           <div class="food-info">
             <h4>Fisherman Soup<br><small>(Red Snapper Head)</small></h4>
-            <p>₦35,000</p>
-          </div>
-        </div>
-
-        <!-- 3) Seafood Okra — Head -->
-        <div class="food-card">
-          <img src="images/obiri-seafood-okra-head.jpg" alt="Seafood Okra with Red Snapper (Head, fresh/dried)" />
-          <div class="food-info">
-            <h4>Seafood Okra<br><small>(Red Snapper — Head)</small></h4>
             <p>₦30,000</p>
           </div>
         </div>
 
-        <!-- 4) Seafood Okra — Middle tail -->
-        <div class="food-card">
-          <img src="images/obiri-seafood-okra-middle-tail.jpg" alt="Seafood Okra with Red Snapper (Middle tail)" />
+        <!-- 3) Fisherman Soup — Middle/Tail -->
+        <div class="food-card" tabindex="0">
+          <img src="images/obiri-fisherman-soup-midtail.jpg" alt="Fisherman Soup with Red Snapper (Middle/Tail)" />
           <div class="food-info">
-            <h4>Seafood Okra<br><small>(Red Snapper — Middle tail)</small></h4>
+            <h4>Fisherman Soup<br><small>(Red Snapper — Middle/Tail)</small></h4>
             <p>₦25,000</p>
+          </div>
+        </div>
+
+        <!-- 4) Seafood Okra (combined Head + Middle/Tail) -->
+        <div class="food-card" tabindex="0">
+          <img src="images/obiri-seafood-okra-head.jpg" alt="Seafood Okra with Red Snapper (Head / Middle/Tail)" />
+          <div class="food-info">
+            <h4>Seafood Okra<br><small>(Red Snapper — Head, Fresh/Dried)</small></h4>
+            <p>₦30,000 <small style="font-weight:700"> (Middle/Tail ₦25,000)</small></p>
           </div>
         </div>
       </div>
@@ -63,21 +64,30 @@
   </main>
 
   <!-- Bottom Navigation (local file links) -->
-  <nav class="bottom-nav">
+  <nav class="bottom-nav" aria-label="Primary">
     <a href="./index.html" class="active">Home</a>
     <a href="./food.html">Food</a>
     <a href="./drinks.html">Drinks</a>
     <a href="./contact.html">Contact</a>
   </nav>
 
-  <!-- Interactive gradient effect script -->
+  <!-- Interactive hover script -->
   <script>
-    // Add interactive hover effect to food cards
-    document.querySelectorAll(".food-card").forEach(card => {
-      card.addEventListener("mousemove", e => {
-        const rect = card.getBoundingClientRect();
-        card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
-        card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.food-card');
+      cards.forEach(card => {
+        card.addEventListener('mousemove', e => {
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
+          card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.removeProperty('--mouse-x');
+          card.style.removeProperty('--mouse-y');
+        });
+        // keyboard focus visual support
+        card.addEventListener('focus', () => card.classList.add('focus'));
+        card.addEventListener('blur',  () => card.classList.remove('focus'));
       });
     });
   </script>
