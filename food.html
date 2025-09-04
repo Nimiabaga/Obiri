@@ -4,10 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Food — OBÍRÍ</title>
+
+  <!-- Global styles -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+  <!-- Food page–only tweaks (kept minimal; fixed selector) -->
   <style>
-    /* Food page-only tweaks */
+    /* Category chips layout on this page */
     .menu-toggle{
       display:flex;
       justify-content:center;
@@ -42,6 +46,8 @@
     .menu-toggle .label-sub{ display:block; font-size:0.78rem; font-weight:700; color:var(--muted); opacity:.95; }
 
     .food-info p small{ font-weight:600; opacity:.9; }
+    /* fixed selector (had missing dot previously) */
+    .menu-toggle a:active::after{ opacity:1 }
   </style>
 </head>
 <body>
@@ -51,40 +57,31 @@
 
   <div class="menu-banner"><h2>FOOD MENU</h2></div>
 
-  <div class="menu-toggle" role="navigation" aria-label="Food categories">
+  <nav class="menu-toggle" role="navigation" aria-label="Food categories">
     <a href="./soup.html">
       <span class="label-main">Soups</span>
       <span class="label-sub">(Mini-wiri)</span>
     </a>
-
-    <a href="./proteins.html">
-      <span class="label-main">Proteins</span>
-    </a>
-
+    <a href="./proteins.html"><span class="label-main">Proteins</span></a>
     <a href="./pepper-dem.html">
       <span class="label-main">PEPPER DEM</span>
       <span class="label-sub">(Anu-Gworogwu)</span>
+      <span class="label-sub">(Bites)</span>
     </a>
-
     <a href="./rice.html">
       <span class="label-main">Rice</span>
       <span class="label-sub">(Arusi)</span>
     </a>
-
     <a href="./pepper-soup.html">
       <span class="label-main">Pepper Soup</span>
       <span class="label-sub">(Mini-wiri Gorogoro)</span>
     </a>
-
-    <a href="./barbeque.html">
-      <span class="label-main">Barbeque</span>
-    </a>
-
+    <a href="./barbeque.html"><span class="label-main">Barbeque</span></a>
     <a href="./swallow-otara.html">
       <span class="label-main">Swallow</span>
       <span class="label-sub">(Otara)</span>
     </a>
-  </div>
+  </nav>
 
   <main>
     <div class="food-grid">
@@ -105,12 +102,49 @@
       </div>
 
       <div class="food-card">
-        <img src="images/obiri-seafood-okra-head.jpg" alt="Seafood Okra with Red Snapper" />
+        <img src="images/obiri-seafood-okra-head.jpg" alt="Seafood Okra with Red Snapper — Head, Fresh/Dried" />
         <div class="food-info">
-          <h4>Seafood Okra<br><small>(Red Snapper — Head, Fresh/Dried)</small></h4>
+          <h4>Seafood Okra<br><small>(Red Snapper — Head)</small></h4>
           <p>₦30,000 <small>(Middle/Tail ₦25,000)</small></p>
         </div>
       </div>
 
       <div class="food-card">
-        <img src="images/peppered-snail.jpg" alt="
+        <img src="images/peppered-snail.jpg" alt="Peppered Snail" />
+        <div class="food-info">
+          <h4>Peppered Snail</h4>
+          <p>₦12,000</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tray-note">Takeout ₦1,000</div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav" aria-label="Primary">
+    <a href="./index.html">Home</a>
+    <a href="./food.html" class="active">Food</a>
+    <a href="./drinks.html">Drinks</a>
+    <a href="./contact.html">Contact</a>
+  </nav>
+
+  <!-- Optional interaction (unchanged) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.food-card');
+      cards.forEach(card => {
+        card.addEventListener('mousemove', e => {
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
+          card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.removeProperty('--mouse-x');
+          card.style.removeProperty('--mouse-y');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
