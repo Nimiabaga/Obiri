@@ -124,7 +124,9 @@ header::after{
 }
 
 /* ====== OBÍRÍ SPECIAL (centered replacement of the next H2) ====== */
-.menu-banner + h2{
+/* Replace the previous .menu-banner + h2 / h3 rules with these so the heading inside the following section is targeted */
+.menu-banner + section > h2,
+.menu-banner + section > h3{
   display:flex !important;
   justify-content:center !important;
   align-items:center !important;
@@ -135,7 +137,8 @@ header::after{
   position:relative !important;
   animation: obiriRise .7s ease-out both; animation-delay:.22s;
 }
-.menu-banner + h2::after{
+.menu-banner + section > h2::after,
+.menu-banner + section > h3::after{
   content:"OBÍRÍ SPECIAL";
   position:absolute; left:50%; transform:translateX(-50%);
   letter-spacing:.12em; font-weight:900; font-size:1.4rem;
@@ -346,4 +349,4 @@ menu-toggle a:active::after{ opacity:1 }
 }
 
 /* small helpers for invisible separation */
-.hidden{ display:none !important
+.hidden{ display:none !important }
