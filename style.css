@@ -353,3 +353,8 @@ main { padding-bottom: calc(var(--nav-h) + 16px); }
 
 /* Helpers */
 .hidden{ display:none !important }
+/* Palm Wine framing (show more of the top without changing HTML) */
+.food-card img[src$="obiri-palm-wine.jpg"]{
+  object-position: 100% 70%;
+}
+

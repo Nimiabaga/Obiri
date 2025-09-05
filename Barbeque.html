@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Barbeque — OBÍRÍ</title>
+
+  <!-- Global styles -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+  <!-- Page-only tweaks (same pattern as other category pages) -->
+  <style>
+    .menu-toggle{
+      display:flex;
+      justify-content:center;
+      gap:.6rem;
+      flex-wrap:wrap;
+      margin:1rem auto 1.2rem;
+      max-width:980px;
+      padding:0 .6rem;
+    }
+    .menu-toggle a{
+      padding:.55rem 1rem;
+      border-radius:8px;
+      font-weight:800;
+      text-decoration:none;
+      background:#0f0f0f;
+      border:1px solid var(--gold-deep);
+      color:var(--gold-solid);
+      transition:box-shadow .2s ease, transform .08s ease;
+      display:flex; flex-direction:column; align-items:center; gap:3px;
+      min-width:140px; text-align:center;
+    }
+    .menu-toggle a:hover{ box-shadow:0 0 10px rgba(232,193,49,.22); }
+    .menu-toggle a:active{ transform:scale(.98); box-shadow:inset 0 -2px 0 var(--gold-mid),0 0 10px rgba(232,193,49,.45); }
+    .menu-toggle .label-main{ display:block; font-size:0.95rem; line-height:1; }
+    .menu-toggle .label-sub{ display:block; font-size:0.78rem; font-weight:700; color:var(--muted); opacity:.95; }
+    .food-info p small{ font-weight:600; opacity:.9; }
+    .menu-toggle a:active::after{ opacity:1 }
+  </style>
+</head>
+<body>
+  <header class="animate__animated animate__fadeInDown">
+    <img src="images/obiri.png" alt="OBÍRÍ Restaurant & Lounge Logo" class="logo" />
+  </header>
+
+  <div class="menu-banner"><h2>FOOD MENU</h2></div>
+
+  <!-- Category chips -->
+  <nav class="menu-toggle" role="navigation" aria-label="Food categories">
+    <a href="./Soup-Mini-Wiri.html">
+      <span class="label-main">Soups</span>
+      <span class="label-sub">(Mini-wiri)</span>
+    </a>
+    <a href="./Proteins.html"><span class="label-main">Proteins</span></a>
+    <a href="./Pepper-dem-Anu-Gworogwu.html">
+      <span class="label-main">PEPPER DEM</span>
+      <span class="label-sub">(Anu-Gworogwu)</span>
+      <span class="label-sub">(Bites)</span>
+    </a>
+    <a href="./Rice-Arusi.html">
+      <span class="label-main">Rice</span>
+      <span class="label-sub">(Arusi)</span>
+    </a>
+    <a href="./pepper-soup.html">
+      <span class="label-main">Pepper Soup</span>
+      <span class="label-sub">(Mini-wiri Gorogoro)</span>
+    </a>
+    <a href="./Barbeque.html" class="active" aria-current="page">
+      <span class="label-main">Barbeque</span>
+    </a>
+    <a href="./Swallow-otara.html">
+      <span class="label-main">Swallow</span>
+      <span class="label-sub">(Otara)</span>
+    </a>
+  </nav>
+
+  <main>
+    <section class="section active" aria-labelledby="bbq-title">
+      <h3 id="bbq-title" class="hero-title" style="text-align:center; margin:0 0 1rem;">
+        Barbeque
+      </h3>
+
+      <div class="food-grid">
+        <!-- Grilled Catfish — ₦20,000 -->
+        <div class="food-card">
+          <img src="images/obiri-barbeque-grilled-catfish.jpg" alt="Grilled Catfish - marinated, hot spice, charcoal grilled; served with coleslaw and fries" />
+          <div class="food-info">
+            <h4>Grilled Catfish<br>
+              <small>Marinated, hot spice, charcoal grilled; served with coleslaw & fries</small>
+            </h4>
+            <p>₦20,000</p>
+          </div>
+        </div>
+
+        <!-- Croaker (marinated) — Big -->
+        <div class="food-card">
+          <img src="images/obiri-barbeque-croaker.jpg" alt="Croaker (marinated) - Big; lemon & hot spice; served with coleslaw and fries" />
+          <div class="food-info">
+            <h4>Croaker (marinated) — Big<br>
+              <small>Lemon & hot spice; served with coleslaw & fries</small>
+            </h4>
+            <p>₦20,000</p>
+          </div>
+        </div>
+
+        <!-- Croaker (marinated) — Small -->
+        <div class="food-card">
+          <img src="images/obiri-barbeque-croaker-small.jpg" alt="Croaker (marinated) - Small; lemon & hot spice; served with coleslaw and fries" />
+          <div class="food-info">
+            <h4>Croaker (marinated) — Small<br>
+              <small>Lemon & hot spice; served with coleslaw & fries</small>
+            </h4>
+            <p>₦15,000</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="tray-note">Takeout ₦1,000</div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav" aria-label="Primary">
+    <a href="./index.html">Home</a>
+    <a href="./food.html">Food</a>
+    <a href="./drinks.html">Drinks</a>
+    <a href="./contact.html">Contact</a>
+  </nav>
+</body>
+</html>
