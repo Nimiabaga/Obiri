@@ -8,6 +8,37 @@
   <!-- Global styles -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+  <!-- Page-only tweaks (same pattern as other category pages) -->
+  <style>
+    .menu-toggle{
+      display:flex;
+      justify-content:center;
+      gap:.6rem;
+      flex-wrap:wrap;
+      margin:1rem auto 1.2rem;
+      max-width:980px;
+      padding:0 .6rem;
+    }
+    .menu-toggle a{
+      padding:.55rem 1rem;
+      border-radius:8px;
+      font-weight:800;
+      text-decoration:none;
+      background:#0f0f0f;
+      border:1px solid var(--gold-deep);
+      color:var(--gold-solid);
+      transition:box-shadow .2s ease, transform .08s ease;
+      display:flex; flex-direction:column; align-items:center; gap:3px;
+      min-width:140px; text-align:center;
+    }
+    .menu-toggle a:hover{ box-shadow:0 0 10px rgba(232,193,49,.22); }
+    .menu-toggle a:active{ transform:scale(.98); box-shadow:inset 0 -2px 0 var(--gold-mid),0 0 10px rgba(232,193,49,.45); }
+    .menu-toggle .label-main{ display:block; font-size:0.95rem; line-height:1; }
+    .menu-toggle .label-sub{ display:block; font-size:0.78rem; font-weight:700; color:var(--muted); opacity:.95; }
+    .food-info p small{ font-weight:600; opacity:.9; }
+    .menu-toggle a:active::after{ opacity:1 }
+  </style>
 </head>
 <body>
   <!-- Header -->
@@ -15,11 +46,35 @@
     <img src="images/obiri.png" alt="OBÍRÍ Restaurant & Lounge Logo" class="logo" />
   </header>
 
-  <!-- Banner -->
-  <div class="menu-banner"><h2>SOUPS</h2></div>
+  <!-- Banner (match other pages) -->
+  <div class="menu-banner"><h2>FOOD MENU</h2></div>
 
-  <!-- Spacer so the global CSS rule (.menu-banner + section...) doesn't replace the first section title -->
-  <div class="hidden" aria-hidden="true"></div>
+  <!-- Category chips (same links/casing as other pages) -->
+  <nav class="menu-toggle" role="navigation" aria-label="Food categories">
+    <a href="./Soup-Mini-Wiri.html" class="active" aria-current="page">
+      <span class="label-main">Soups</span>
+      <span class="label-sub">(Mini-wiri)</span>
+    </a>
+    <a href="./Proteins.html"><span class="label-main">Proteins</span></a>
+    <a href="./Pepper-dem-Anu-Gworogwu.html">
+      <span class="label-main">PEPPER DEM</span>
+      <span class="label-sub">(Anu-Gworogwu)</span>
+      <span class="label-sub">(Bites)</span>
+    </a>
+    <a href="./Rice-Arusi.html">
+      <span class="label-main">Rice</span>
+      <span class="label-sub">(Arusi)</span>
+    </a>
+    <a href="./pepper-soup.html">
+      <span class="label-main">Pepper Soup</span>
+      <span class="label-sub">(Mini-wiri Gorogoro)</span>
+    </a>
+    <a href="./Barbeque.html"><span class="label-main">Barbeque</span></a>
+    <a href="./Swallow-otara.html">
+      <span class="label-main">Swallow</span>
+      <span class="label-sub">(Otara)</span>
+    </a>
+  </nav>
 
   <main>
     <!-- Soups (Mini-Wiri) -->
@@ -99,7 +154,7 @@
           <img src="images/obiri-fisherman-soup-head.jpg" alt="Fisherman Soup with Red Snapper Head" />
           <div class="food-info">
             <h4>Fisherman Soup<br><small>(Red Snapper Head)</small></h4>
-            <p>₦30,000</p> <!-- If the confirmed price is ₦35,000, update this figure -->
+            <p>₦30,000</p>
           </div>
         </div>
 
@@ -131,5 +186,23 @@
     <a href="./drinks.html">Drinks</a>
     <a href="./contact.html">Contact</a>
   </nav>
+
+  <!-- Small hover interaction (same as other pages) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.food-card');
+      cards.forEach(card => {
+        card.addEventListener('mousemove', e => {
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
+          card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.removeProperty('--mouse-x');
+          card.style.removeProperty('--mouse-y');
+        });
+      });
+    });
+  </script>
 </body>
 </html>

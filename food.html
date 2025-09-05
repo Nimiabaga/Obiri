@@ -63,13 +63,14 @@
       <span class="label-main">Soups</span>
       <span class="label-sub">(Mini-wiri)</span>
     </a>
-    <a href="./proteins.html"><span class="label-main">Proteins</span></a>
-    <a href="./pepper-dem.html">
+    <!-- FIXED CASE: proteins.html -> Proteins.html -->
+    <a href="./Proteins.html"><span class="label-main">Proteins</span></a>
+    <a href="./Pepper-dem-Anu-Gworogwu.html">
       <span class="label-main">PEPPER DEM</span>
       <span class="label-sub">(Anu-Gworogwu)</span>
       <span class="label-sub">(Bites)</span>
     </a>
-    <a href="./rice.html">
+    <a href="./Rice-Arusi.html">
       <span class="label-main">Rice</span>
       <span class="label-sub">(Arusi)</span>
     </a>
@@ -139,8 +140,8 @@
     document.addEventListener('DOMContentLoaded', () => {
       const cards = document.querySelectorAll('.food-card');
       cards.forEach(card => {
+        const rect = card.getBoundingClientRect();
         card.addEventListener('mousemove', e => {
-          const rect = card.getBoundingClientRect();
           card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
           card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
         });
