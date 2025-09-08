@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap');
+/* New global font for the whole site */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap');
+
 /* =========================
    OBÍRÍ THEME — unified brand gold color (logo color used everywhere)
    ========================= */
@@ -38,7 +42,7 @@
 html,body{
   margin:0; padding:0; background:var(--bg); color:var(--text);
   -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  font-family: "Manrope", "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
 }
 ::selection{background:rgba(var(--brand-r),var(--brand-g),var(--brand-b),.25); color:#fff}
 
@@ -47,6 +51,17 @@ body::before{
   content:""; position:fixed; inset:-30% -20% auto -20%; height:70vh; z-index:-1;
   background: radial-gradient(60% 50% at 50% 0%, rgba(var(--brand-r),var(--brand-g),var(--brand-b),.06) 0%, transparent 65%);
   pointer-events:none;
+}
+/* Old faint overlay stays off so the real background shows */
+body::after{ display:none; }
+
+/* Make the utensils image the actual background */
+body{
+  background-image: url("images/bg-utensils.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 /* ================= HEADER ================= */
@@ -108,6 +123,10 @@ header::after{
   text-shadow:0 1px 0 rgba(255,255,255,.06), 0 6px 18px rgba(var(--brand-r),var(--brand-g),var(--brand-b),.18);
   animation: obiriSweep 4s linear infinite;
 }
+/* Ensure headings inherit the new global font everywhere */
+.menu-banner h2,
+.hero-title{ font-family: inherit !important; }
+
 .menu-banner h2::before,
 .menu-banner h2::after{
   content:""; position:absolute; top:50%; width:72px; height:1px;
@@ -220,7 +239,7 @@ header::after{
 /* Price (gold gradient) */
 .food-info p {
   font-weight: 800;
-  font-size: 1.1rem;
+  font-size: 1.24rem; /* was 1.1rem */
   margin: 0;
   background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold-mid) 55%, var(--gold-deep) 100%);
   -webkit-background-clip: text;
@@ -254,7 +273,7 @@ header::after{
   .food-card { width: calc(25% - 1rem); max-width: 220px; min-height: 240px; border-radius:12px; }
   .food-card img { height: 140px; }
   .food-info h4 { font-size: .92rem; }
-  .food-info p { font-size: 1.02rem; }
+  .food-info p { font-size: 1.14rem; } /* was 1.02rem */
 }
 
 /* small phones */
@@ -357,4 +376,3 @@ main { padding-bottom: calc(var(--nav-h) + 16px); }
 .food-card img[src$="obiri-palm-wine.jpg"]{
   object-position: 100% 70%;
 }
-
