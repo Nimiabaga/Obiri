@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wine — OBÍRÍ</title>
+
+  <!-- Global styles -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+  <!-- Page-only tweaks (same pattern as other drinks pages) -->
+  <style>
+    .menu-toggle{
+      display:flex; justify-content:center; gap:.6rem; flex-wrap:wrap;
+      margin:1rem auto 1.2rem; max-width:1100px; padding:0 .6rem;
+    }
+    .menu-toggle a{
+      padding:.55rem 1rem; border-radius:8px; font-weight:800; text-decoration:none;
+      background:#0f0f0f; border:1px solid var(--gold-deep); color:var(--gold-solid);
+      transition:box-shadow .2s ease, transform .08s ease;
+      display:flex; flex-direction:column; align-items:center; gap:3px; min-width:140px; text-align:center;
+    }
+    .menu-toggle a:hover{ box-shadow:0 0 10px rgba(232,193,49,.22); }
+    .menu-toggle a:active{ transform:scale(.98); box-shadow:inset 0 -2px 0 var(--gold-mid),0 0 10px rgba(232,193,49,.45); }
+    .menu-toggle .label-main{ display:block; font-size:0.95rem; line-height:1; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="animate__animated animate__fadeInDown">
+    <img src="images/obiri.png" alt="OBÍRÍ Restaurant & Lounge Logo" class="logo" />
+  </header>
+
+  <!-- Banner -->
+  <div class="menu-banner"><h2>DRINKS MENU</h2></div>
+
+  <!-- Drink categories -->
+  <nav class="menu-toggle" role="navigation" aria-label="Drink categories">
+    <a href="./Beers-Stouts.html"><span class="label-main">Beers / Stouts</span></a>
+    <a href="./Gin.html"><span class="label-main">Gin</span></a>
+    <a href="./Tequila.html"><span class="label-main">Tequila</span></a>
+    <a href="./Softs-Water.html"><span class="label-main">Softs & Water</span></a>
+    <a href="./Energy-Drinks.html"><span class="label-main">Energy Drinks</span></a>
+    <a href="./Sparkling-Wine.html"><span class="label-main">Sparkling Wine</span></a>
+    <a href="./Wine.html" aria-current="page"><span class="label-main">Wine</span></a>
+    <a href="./Cream-Liqueur.html"><span class="label-main">Cream Liqueur</span></a>
+    <a href="./Liqueur.html"><span class="label-main">Liqueur</span></a>
+    <a href="./Brandy.html"><span class="label-main">Brandy</span></a>
+    <a href="./Whiskey.html"><span class="label-main">Whiskey</span></a>
+    <a href="./Champagne.html"><span class="label-main">Champagne</span></a>
+  </nav>
+
+  <main>
+    <section class="section active" aria-labelledby="wine-title">
+      <h3 id="wine-title" class="hero-title" style="text-align:center; margin:0 0 1rem;">
+        Wine
+      </h3>
+
+      <div class="food-grid">
+        <!-- Four Cousins — ₦18,000 -->
+        <div class="food-card">
+          <img src="images/obiri-four-cousins.jpg" alt="Four Cousins wine" />
+          <div class="food-info">
+            <h4>Four Cousins</h4>
+            <p>₦18,000</p>
+          </div>
+        </div>
+
+        <!-- Drostdy Hoff (Big) — ₦18,000 -->
+        <div class="food-card">
+          <img src="images/obiri-drostdy-hoff-big.jpg" alt="Drostdy Hoff (Big)" />
+          <div class="food-info">
+            <h4>Drostdy Hoff (Big)</h4>
+            <p>₦18,000</p>
+          </div>
+        </div>
+
+        <!-- Drostdy (Small) — ₦10,000 -->
+        <div class="food-card">
+          <img src="images/obiri-drostdy-small.jpg" alt="Drostdy (Small)" />
+          <div class="food-info">
+            <h4>Drostdy (Small)</h4>
+            <p>₦10,000</p>
+          </div>
+        </div>
+
+        <!-- Expression — ₦18,000 -->
+        <div class="food-card">
+          <img src="images/obiri-expression.jpg" alt="Expression wine" />
+          <div class="food-info">
+            <h4>Expression</h4>
+            <p>₦18,000</p>
+          </div>
+        </div>
+
+        <!-- Sweet Lips — ₦20,000 -->
+        <div class="food-card">
+          <img src="images/obiri-sweet-lips.jpg" alt="Sweet Lips wine" />
+          <div class="food-info">
+            <h4>Sweet Lips</h4>
+            <p>₦20,000</p>
+          </div>
+        </div>
+
+        <!-- Carlo Rossi — ₦20,000 -->
+        <div class="food-card">
+          <img src="images/obiri-carlo-rossi.jpg" alt="Carlo Rossi wine" />
+          <div class="food-info">
+            <h4>Carlo Rossi</h4>
+            <p>₦20,000</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="tray-note">Takeout ₦1,000</div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav" aria-label="Primary">
+    <a href="./index.html">Home</a>
+    <a href="./food.html">Food</a>
+    <a href="./drinks.html" class="active">Drinks</a>
+    <a href="./contact.html">Contact</a>
+  </nav>
+</body>
+</html>
