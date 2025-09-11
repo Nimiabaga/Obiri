@@ -23,7 +23,23 @@
     .menu-toggle a:hover{ box-shadow:0 0 10px rgba(232,193,49,.22); }
     .menu-toggle .label-main{ display:block; font-size:0.95rem; line-height:1; }
     .menu-toggle .label-sub{ display:block; font-size:0.78rem; font-weight:700; color:var(--muted); opacity:.95; }
-    .food-info p small{ font-weight:600; opacity:.9; }
+
+    /* page-only styling for the flavor lists */
+    .sublist{
+      margin:.35rem .75rem .2rem;
+      padding-left:1.1rem;      /* space for bullets */
+      text-align:left;
+      list-style:disc;
+    }
+    .sublist li{
+      margin:.14rem 0;
+      font-size:.82rem;
+      color:#d9d9da;            /* readable on dark */
+      opacity:.9;
+    }
+    .sublist li.note{
+      list-style:none; padding-left:0; margin-top:.25rem; color:var(--muted);
+    }
   </style>
 </head>
 <body>
@@ -46,7 +62,15 @@
         <div class="food-info">
           <h4>Milkshakes</h4>
           <p>₦8,900</p>
-          <p><small>Amarula • Banana • Caramel • Chocolate • Oreo • Strawberry • Vanilla</small></p>
+          <ul class="sublist">
+            <li>Amarula</li>
+            <li>Banana</li>
+            <li>Caramel</li>
+            <li>Chocolate</li>
+            <li>Oreo</li>
+            <li>Strawberry</li>
+            <li>Vanilla</li>
+          </ul>
         </div>
       </div>
 
@@ -56,12 +80,20 @@
         <div class="food-info">
           <h4>Smoothies</h4>
           <p>₦8,900</p>
-          <p><small>Coconut • Pineapple • Banana • Avocado • Dates • Beetroot<br/>Mix & match (fruits & nuts available)</small></p>
+          <ul class="sublist">
+            <li>Coconut</li>
+            <li>Pineapple</li>
+            <li>Banana</li>
+            <li>Avocado</li>
+            <li>Dates</li>
+            <li>Beetroot</li>
+            <li class="note">Mix & match (fruits & nuts available)</li>
+          </ul>
         </div>
       </div>
     </div>
 
-    <div class="tray-note">Update smoothie price anytime—structure already set.</div>
+    <div class="tray-note">Takeout ₦500</div>
   </main>
 
   <nav class="bottom-nav" aria-label="Primary">

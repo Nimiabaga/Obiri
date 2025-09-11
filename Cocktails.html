@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cocktails — OBÍRÍ</title>
+
+  <!-- Global styles -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+  <!-- Page-only tweaks -->
+  <style>
+    .menu-toggle{
+      display:flex; justify-content:center; gap:.6rem; flex-wrap:wrap;
+      margin:1rem auto 1.2rem; max-width:980px; padding:0 .6rem;
+    }
+    .menu-toggle a{
+      padding:.55rem 1rem; border-radius:8px; font-weight:800; text-decoration:none;
+      background:#0f0f0f; border:1px solid var(--gold-deep); color:var(--gold-solid);
+      display:flex; flex-direction:column; align-items:center; gap:3px; min-width:140px; text-align:center;
+    }
+    .mini-list{
+      margin:.4rem 0 0; padding-left:1.1rem; text-align:left;
+      font-size:.85rem; line-height:1.3; color:#ddd; list-style:disc;
+      max-height:180px; overflow:auto;
+    }
+    /* no scroll on last two sections */
+    .mini-list.noscroll{ max-height:unset; overflow:visible; }
+    .mini-note{ text-align:center; color:var(--muted); margin:-.2rem 0 .6rem; font-weight:700; }
+  </style>
+</head>
+<body>
+  <header class="animate__animated animate__fadeInDown">
+    <img src="images/obiri.png" alt="OBÍRÍ Restaurant & Lounge Logo" class="logo" />
+  </header>
+
+  <div class="menu-banner"><h2>COCKTAILS</h2></div>
+  <div class="mini-note">Browse all: Regular • Non-Alcoholic • Shots • Special Signatures</div>
+
+  <!-- Quick jump -->
+  <nav class="menu-toggle" aria-label="Cocktail sections">
+    <a href="#regular"><span class="label-main">Regular</span></a>
+    <a href="#nonalcoholic"><span class="label-main">Non-Alcoholic</span></a>
+    <a href="#shots"><span class="label-main">Shots</span></a>
+    <a href="#signatures"><span class="label-main">Signatures</span></a>
+    <a href="./drinks.html"><span class="label-main">← Back to Drinks</span></a>
+  </nav>
+
+  <main>
+    <div class="food-grid">
+      <!-- Regular Cocktails — single price -->
+      <div class="food-card" id="regular">
+        <img src="images/obiri-cocktails.jpg" alt="OBÍRÍ cocktails" />
+        <div class="food-info">
+          <h4>Cocktails</h4>
+          <p>₦8,900</p>
+          <ul class="mini-list">
+            <li>Pineapple Colada</li>
+            <li>Mojito</li>
+            <li>Sex On The Beach</li>
+            <li>Wet Pussy</li>
+            <li>Strawberry Daiquiri (Frozen)</li>
+            <li>Strawberry Daiquiri (Classic)</li>
+            <li>Blue Lagoon</li>
+            <li>Jamaica Paradise</li>
+            <li>Sex On The Driveway</li>
+            <li>Sex On The Grass</li>
+            <li>Tropical Punch</li>
+            <li>Tequila Sunrise</li>
+            <li>Long Island</li>
+            <li>Mosquito Bite</li>
+            <li>Elephant Strawberry Cream</li>
+            <li>Pink Elephant</li>
+            <li>Amarula Pina Colada</li>
+            <li>Frozen Margarita</li>
+            <li>Classic Margarita</li>
+            <li>Cosmopolitan</li>
+            <li>Classic Daiquiri</li>
+            <li>Frozen Daiquiri</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Non-Alcoholic — single price -->
+      <div class="food-card" id="nonalcoholic">
+        <img src="images/obiri-non-alcoholic-cocktails.jpg" alt="Non-alcoholic cocktails" />
+        <div class="food-info">
+          <h4>Non-Alcoholic Cocktails</h4>
+          <p>₦7,900</p>
+          <ul class="mini-list">
+            <li>Chapman</li>
+            <li>Virgin Colada</li>
+            <li>Virgin Mojito</li>
+            <li>Green Fountain (Non-Alcoholic)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Cocktail Shots — single price; tequila called out -->
+      <div class="food-card" id="shots">
+        <img src="images/obiri-cocktail-shots.jpg" alt="Cocktail shots" />
+        <div class="food-info">
+          <h4>Cocktail Shots</h4>
+          <p>₦2,500</p>
+          <ul class="mini-list noscroll">
+            <li>Blue Kamikaze</li>
+            <li>Amarula Springbokkie</li>
+            <li>Woo-Woo</li>
+            <li>Ginseng Shots</li>
+            <li>Tequila Shots <small>(₦2,000)</small></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Special Cocktail Signatures — single price -->
+      <div class="food-card" id="signatures">
+        <img src="images/obiri-cocktail-signatures.jpg" alt="Special cocktail signatures" />
+        <div class="food-info">
+          <h4>Special Cocktail Signatures</h4>
+          <p>₦9,900</p>
+          <ul class="mini-list noscroll">
+            <li>Summer In December</li>
+            <li>Snow In Hell</li>
+            <li>Coco Master</li>
+            <li>Ginseng Highway</li>
+            <li>Guns &amp; Roses</li>
+            <li>Blood Rituals</li>
+            <li>Green Fountain</li>
+            <li>Henrici Whyte</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="tray-note">One price per section; only exceptions are annotated.</div>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Primary">
+    <a href="./index.html">Home</a>
+    <a href="./food.html">Food</a>
+    <a href="./drinks.html" class="active">Drinks</a>
+    <a href="./contact.html">Contact</a>
+  </nav>
+</body>
+</html>
