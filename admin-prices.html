@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — Price Editor</title>
+  <style>
+    :root{
+      --bg:#0b0b0b; --panel:#141414; --ink:#f5f5f5; --muted:#a9a9a9; --line:#222;
+      --accent:#ffffff; --danger:#ff4949;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial}
+    a{color:var(--ink);text-decoration:none}
+    .wrap{max-width:1100px;margin:0 auto;padding:18px 14px 80px}
+    header{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+    header img{height:38px;filter:grayscale(1) contrast(1.05) brightness(1.05)}
+    .back{color:#fff;font-weight:800}
+    h1{margin:6px 0 2px;font-size:26px;letter-spacing:.08em}
+    .sub{color:var(--muted);margin:0 0 18px}
+
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+
+    .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+    .btn{background:#fff;color:#000;font-weight:900;border:0;border-radius:999px;padding:.6rem 1rem;cursor:pointer}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .btn-ghost{background:transparent;color:#fff;border:1px solid var(--line)}
+    .btn-danger{background:var(--danger);color:#fff}
+    .spacer{flex:1}
+    input[type="text"], input[type="number"], select{
+      background:#0f0f0f;color:#fff;border:1px solid var(--line);border-radius:8px;padding:.55rem .7rem;font-weight:700;
+    }
+
+    table{width:100%;border-collapse:separate;border-spacing:0}
+    thead th{position:sticky;top:0;background:var(--panel);z-index:1}
+    th,td{border-bottom:1px solid var(--line);padding:.6rem .5rem;text-align:left}
+    th{font-size:.8rem;letter-spacing:.08em;color:#dcdcdc;text-transform:uppercase}
+    tr:hover td{background:#101010}
+    td input[type="text"], td select{width:100%}
+    .right{text-align:right}
+    .center{text-align:center}
+    .pill{display:inline-block;padding:.2rem .5rem;border:1px solid var(--line);border-radius:999px;color:#dcdcdc;font-weight:800}
+    .del{background:transparent;border:1px solid var(--line);color:#fff;border-radius:8px;padding:.35rem .6rem;cursor:pointer}
+    .del:hover{background:#1a1a1a}
+    .footer-note{color:var(--muted);margin-top:10px;font-size:.9rem}
+
+    .toast{position:fixed;right:14px;bottom:14px;background:#0f0f0f;border:1px solid #2a2a2a;padding:.6rem .9rem;border-radius:10px;font-weight:900;box-shadow:0 10px 24px rgba(0,0,0,.35);opacity:0;transform:translateY(8px);transition:.2s}
+    .toast.show{opacity:1;transform:translateY(0)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="back" href="./admin.html">← Back to Admin</a>
+      <img src="images/obiri.png" alt="OBÍRÍ logo (mono)">
+    </header>
+
+    <h1>PRICE EDITOR</h1>
+    <p class="sub">Pick Food/Drinks, choose the item from the dropdown, type price normally, toggle availability, or delete.</p>
+
+    <div class="panel">
+      <div class="toolbar">
+        <input id="search" type="text" placeholder="Search item or category…"/>
+        <select id="filterType" title="Filter">
+          <option value="">Show: All</option>
+          <option value="Drinks">Drinks only</option>
+          <option value="Food">Food only</option>
+        </select>
+        <div class="spacer"></div>
+        <button class="btn" id="addItem">Add Item</button>
+        <button class="btn" id="saveBtn">Save</button>
+        <button class="btn" id="download">Download JSON</button>
+        <label class="btn btn-ghost" for="file">Load JSON</label>
+        <input id="file" type="file" accept=".json" hidden/>
+        <button class="btn btn-ghost" id="resetTwo">Start fresh (2 rows)</button>
+        <button class="btn btn-ghost" id="clearAll">Clear All (local)</button>
+      </div>
+
+      <!-- Only TWO pickers per row: Type + Item -->
+      <table id="tbl">
+        <thead>
+          <tr>
+            <th style="width:130px">Type</th>
+            <th>Item (choose from dropdown)</th>
+            <th class="right" style="width:140px">Price (₦)</th>
+            <th class="center" style="width:120px">Available</th>
+            <th class="right" style="width:110px">Action</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+
+      <div class="footer-note">Data is saved in your browser (localStorage) as <span class="pill">obiri_menu</span>.</div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">Saved ✓</div>
+
+<script>
+  const STORAGE_KEY = 'obiri_menu';
+
+  // helpers
+  const parseNaira  = s => Number(String(s).replace(/[^0-9]/g,'') || 0);
+  const load = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  const save = data => localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  const toast = (m='Saved ✓') => { const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1200); };
+
+  // DRINKS catalog (optgroups → items)
+  const drinksCatalog = {
+    'Beers / Stouts': [
+      {name:'Big Beers / Stouts', price:2500},
+      {name:'Small Beers / Stouts', price:2000},
+      {name:'Heineken', price:2500},
+      {name:'Star Radler', price:2000},
+      {name:'Desperados', price:2000},
+      {name:'Flying Fish', price:2000},
+      {name:'Legend Twist', price:2000},
+      {name:'Smirnoff Ice (Small)', price:2000},
+      {name:'Smirnoff Ice (Double Black)', price:2000}
+    ],
+    'Gin': [
+      {name:'Bombay', price:45000},
+      {name:'Gordons (Small)', price:5000},
+      {name:'Gordons (Big)', price:25000}
+    ],
+    'Tequila': [
+      {name:'Shot', price:2000},
+      {name:'Bottle', price:45000}
+    ],
+    'Softs & Water': [
+      {name:'Chi-Active', price:3000},
+      {name:'Chivita Exotic', price:3000},
+      {name:'Coke / Fanta / Sprite', price:1040},
+      {name:'Fayrouz', price:1040},
+      {name:'Hollandia', price:3000},
+      {name:'Water', price:600},
+      {name:'Schweppes', price:1040},
+      {name:'Malts', price:1040}
+    ],
+    'Energy Drinks': [
+      {name:'Black Bullet', price:2600},
+      {name:'Blue Bullet', price:2600},
+      {name:'Red Bull', price:2600},
+      {name:'Power Horse', price:2600}
+    ],
+    'Sparkling Wine': [
+      {name:'Andre Rose', price:35000},
+      {name:'Andre Brut', price:40000},
+      {name:'Martini Rose', price:35000}
+    ],
+    'Wine': [
+      {name:'Four Cousins', price:18000},
+      {name:'Drostdy Hoff (Big)', price:18000},
+      {name:'Drostdy (Small)', price:10000},
+      {name:'Expression', price:18000},
+      {name:'Sweet Lips', price:20000},
+      {name:'Carlo Rossi', price:20000}
+    ],
+    'Cream Liqueur': [
+      {name:'Baileys', price:45000},
+      {name:'Amarula', price:40000}
+    ],
+    'Brandy': [
+      {name:'Hennessy VS', price:100000},
+      {name:'Hennessy VSOP', price:150000},
+      {name:'Hennessy XO', price:650000},
+      {name:'Remy Martin VSOP', price:130000},
+      {name:'Martel VS', price:100000},
+      {name:'Martel VSOP', price:110000},
+      {name:'Martel Blue Swift', price:140000}
+    ],
+    'Whiskey': [
+      {name:'Jameson Black', price:70000},
+      {name:'Jameson Green', price:55000},
+      {name:'Glenfiddich 21 Years', price:600000},
+      {name:'Glenfiddich 18 Years', price:250000},
+      {name:'Glenfiddich 15 Years', price:140000},
+      {name:'Glenfiddich 12 Years', price:100000},
+      {name:'Glenmorangie 18 Years', price:300000},
+      {name:'Glenmorangie 10 Years', price:80000},
+      {name:'Black Label', price:70000},
+      {name:'Gold Label', price:110000},
+      {name:'Monkey Shoulder', price:70000},
+      {name:'Macallan 12 Years', price:150000},
+      {name:'Singleton 12 Years', price:100000},
+      {name:'Observatory 20 Years', price:70000},
+      {name:'Jack Daniels', price:65000},
+      {name:'American Honey', price:45000}
+    ],
+    'Champagne': [
+      {name:'Don P', price:850000},
+      {name:'Veuve Rich', price:250000},
+      {name:'Moët Rich', price:190000},
+      {name:'Veuve Clicquot Brut', price:170000},
+      {name:'Belaire', price:100000}
+    ]
+  };
+
+  // FOOD catalog placeholder (add later when you share food items)
+  const foodCatalog = { };
+
+  // state
+  let data = load(); // [{id,type,cat,name,price,available}]
+  let q = '';
+  let filterType = '';
+
+  // seed: if empty create TWO neat rows (Drinks + Food)
+  if (!data.length){
+    data = [
+      {id:crypto.randomUUID(), type:'Drinks', cat:'', name:'', price:0, available:true},
+      {id:crypto.randomUUID(), type:'Food',   cat:'', name:'', price:0, available:true},
+    ];
+    save(data);
+  } else {
+    // ensure all rows have a 'type'
+    let changed=false;
+    for (const r of data){ if (!r.type){ r.type='Drinks'; changed=true; } }
+    if (changed) save(data);
+  }
+
+  const rowsEl = document.getElementById('rows');
+
+  function catalogForType(type){
+    return type === 'Food' ? foodCatalog : drinksCatalog;
+  }
+
+  function makeTypeSelect(row){
+    const sel = document.createElement('select');
+    ['Drinks','Food'].forEach(t=>{
+      const o=document.createElement('option'); o.value=o.textContent=t;
+      if(row.type===t) o.selected=true;
+      sel.appendChild(o);
+    });
+    sel.onchange = e => {
+      row.type = e.target.value;
+      row.cat = ''; row.name=''; row.price=0; // reset when changing type
+      save(data); render();
+    };
+    return sel;
+  }
+
+  // Item dropdown (optgroups by category)
+  function makeItemSelect(row){
+    const sel = document.createElement('select');
+    sel.appendChild(new Option('— pick item —', ''));
+
+    const catalog = catalogForType(row.type);
+    const cats = Object.keys(catalog);
+
+    if (!cats.length){
+      sel.appendChild(new Option('(No items yet)', ''));
+      sel.disabled = true;
+    } else {
+      cats.forEach(cat=>{
+        const og = document.createElement('optgroup');
+        og.label = cat;
+        (catalog[cat]||[]).forEach(it=>{
+          const val = `${cat}|||${it.name}`;
+          const opt = new Option(it.name, val);
+          if (row.cat===cat && row.name===it.name) opt.selected = true;
+          og.appendChild(opt);
+        });
+        sel.appendChild(og);
+      });
+    }
+    sel.appendChild(new Option('— Custom item… —','__custom__'));
+
+    sel.onchange = () => {
+      if (sel.value === '__custom__'){
+        const customName = prompt('Enter custom item name');
+        if (customName){
+          row.name = customName; row.cat='(Custom)';
+          save(data); render();
+        } else { render(); }
+        return;
+      }
+      if (!sel.value){ row.name=''; row.cat=''; save(data); return; }
+
+      const [cat,name] = sel.value.split('|||');
+      row.cat = cat; row.name = name;
+
+      // auto-fill default price
+      const found = (catalog[cat]||[]).find(i=>i.name===name);
+      if (found) row.price = Number(found.price)||0;
+
+      save(data); render();
+    };
+
+    return sel;
+  }
+
+  function render(){
+    const needle = q.trim().toLowerCase();
+    const filtered = data.filter(r=>{
+      const textMatch = !needle || (r.name||'').toLowerCase().includes(needle) || (r.cat||'').toLowerCase().includes(needle);
+      const typeMatch = !filterType || r.type===filterType;
+      return textMatch && typeMatch;
+    });
+
+    rowsEl.innerHTML = '';
+    for (const r of filtered){
+      const tr = document.createElement('tr');
+
+      const tdType  = document.createElement('td'); tdType.appendChild(makeTypeSelect(r));
+
+      const tdItem  = document.createElement('td'); tdItem.appendChild(makeItemSelect(r));
+
+      // PRICE: normal typing (no auto-format while typing)
+      const tdPrice = document.createElement('td'); tdPrice.className='right';
+      const inPrice = document.createElement('input');
+      inPrice.type='text'; inPrice.inputMode='numeric';
+      inPrice.value = r.price ? String(r.price) : '';
+      inPrice.placeholder = '0';
+      inPrice.oninput = e => { r.price = parseNaira(e.target.value); save(data); };
+      tdPrice.appendChild(inPrice);
+
+      const tdAvail = document.createElement('td'); tdAvail.className='center';
+      const chk = document.createElement('input'); chk.type='checkbox'; chk.checked = !!r.available;
+      chk.onchange = e => { r.available = e.target.checked; save(data); };
+      tdAvail.appendChild(chk);
+
+      const tdAct = document.createElement('td'); tdAct.className='right';
+      const del = document.createElement('button'); del.className='del'; del.textContent='Delete';
+      del.onclick = () => { data = data.filter(x => x.id !== r.id); save(data); render(); };
+      tdAct.appendChild(del);
+
+      tr.append(tdType, tdItem, tdPrice, tdAvail, tdAct);
+      rowsEl.appendChild(tr);
+    }
+  }
+
+  // actions
+  document.getElementById('addItem').onclick = () => {
+    const startType = filterType || 'Drinks';
+    data.unshift({id:crypto.randomUUID(), type:startType, cat:'', name:'', price:0, available:true});
+    save(data); render();
+  };
+  document.getElementById('saveBtn').onclick = () => { save(data); toast('Saved ✓'); };
+
+  document.getElementById('download').onclick = () => {
+    const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `obiri-prices-${new Date().toISOString().slice(0,10)}.json`;
+    a.click(); URL.revokeObjectURL(a.href);
+  };
+
+  document.getElementById('file').onchange = e => {
+    const file = e.target.files[0]; if(!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try{
+        const imported = JSON.parse(reader.result);
+        if(!Array.isArray(imported)) throw new Error('Invalid format');
+        data = imported.map(x => ({
+          id: x.id || crypto.randomUUID(),
+          type: x.type === 'Food' ? 'Food' : 'Drinks',
+          cat: x.cat || '',
+          name: x.name || '',
+          price: Number(x.price)||0,
+          available: !!x.available
+        }));
+        save(data); render(); toast('Loaded ✓');
+      }catch(err){ alert('Could not load JSON: '+err.message); }
+    };
+    reader.readAsText(file); e.target.value='';
+  };
+
+  document.getElementById('clearAll').onclick = () => {
+    if(confirm('Clear ALL locally saved items?')){ data=[]; save(data); render(); toast('Cleared ✓'); }
+  };
+
+  // NEW: Reset to exactly TWO neat rows (Drinks + Food)
+  document.getElementById('resetTwo').onclick = () => {
+    if(confirm('Replace current items with 2 rows (Drinks + Food)?')){
+      data = [
+        {id:crypto.randomUUID(), type:'Drinks', cat:'', name:'', price:0, available:true},
+        {id:crypto.randomUUID(), type:'Food',   cat:'', name:'', price:0, available:true},
+      ];
+      save(data); render(); toast('Ready ✓');
+    }
+  };
+
+  document.getElementById('search').oninput = e => { q = e.target.value; render(); };
+  document.getElementById('filterType').onchange = e => { filterType = e.target.value; render(); };
+
+  render();
+</script>
+</body>
+</html>
