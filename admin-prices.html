@@ -4,6 +4,9 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin — Price Editor</title>
+  <meta name="robots" content="noindex,nofollow">
+  <style>html.locked body{visibility:hidden}</style>
+  <script>document.documentElement.classList.add('locked');</script>
   <style>
     :root{
       --bg:#0b0b0b; --panel:#141414; --ink:#f5f5f5; --muted:#a9a9a9; --line:#222;
@@ -18,9 +21,7 @@
     .back{color:#fff;font-weight:800}
     h1{margin:6px 0 2px;font-size:26px;letter-spacing:.08em}
     .sub{color:var(--muted);margin:0 0 18px}
-
     .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
-
     .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
     .btn{background:#fff;color:#000;font-weight:900;border:0;border-radius:999px;padding:.6rem 1rem;cursor:pointer}
     .btn:disabled{opacity:.5;cursor:not-allowed}
@@ -30,7 +31,6 @@
     input[type="text"], input[type="number"], select{
       background:#0f0f0f;color:#fff;border:1px solid var(--line);border-radius:8px;padding:.55rem .7rem;font-weight:700;
     }
-
     table{width:100%;border-collapse:separate;border-spacing:0}
     thead th{position:sticky;top:0;background:var(--panel);z-index:1}
     th,td{border-bottom:1px solid var(--line);padding:.6rem .5rem;text-align:left}
@@ -43,21 +43,32 @@
     .del{background:transparent;border:1px solid var(--line);color:#fff;border-radius:8px;padding:.35rem .6rem;cursor:pointer}
     .del:hover{background:#1a1a1a}
     .footer-note{color:var(--muted);margin-top:10px;font-size:.9rem}
-
     .toast{position:fixed;right:14px;bottom:14px;background:#0f0f0f;border:1px solid #2a2a2a;padding:.6rem .9rem;border-radius:10px;font-weight:900;box-shadow:0 10px 24px rgba(0,0,0,.35);opacity:0;transform:translateY(8px);transition:.2s}
     .toast.show{opacity:1;transform:translateY(0)}
   </style>
 </head>
 <body>
+  <!-- Simple PIN Gate (same as admin.html) -->
+  <script>
+    const PIN = '0429';
+    const KEY = 'admin_ok';
+    if (!sessionStorage.getItem(KEY)) {
+      const input = prompt('Enter admin PIN');
+      if (input === PIN) {
+        sessionStorage.setItem(KEY, '1');
+      } else {
+        location.replace('/');
+      }
+    }
+    document.documentElement.classList.remove('locked');
+  </script>
   <div class="wrap">
     <header>
       <a class="back" href="./admin.html">← Back to Admin</a>
       <img src="images/obiri.png" alt="OBÍRÍ logo (mono)">
     </header>
-
     <h1>PRICE EDITOR</h1>
     <p class="sub">Pick Food/Drinks, choose the item from the dropdown, type price normally, toggle availability, or delete.</p>
-
     <div class="panel">
       <div class="toolbar">
         <input id="search" type="text" placeholder="Search item or category…"/>
@@ -73,10 +84,9 @@
         <label class="btn btn-ghost" for="file">Load JSON</label>
         <input id="file" type="file" accept=".json" hidden/>
         <button class="btn btn-ghost" id="resetTwo">Start fresh (2 rows)</button>
-        <button class="btn btn-ghost" id="clearAll">Clear All (local)</button>
+        <button class="btn btn-ghost" id="clearAll">Clear All (cloud)</button>
+        <button class="btn btn-ghost" id="reloadSheet">Reload Sheet</button>
       </div>
-
-      <!-- Only TWO pickers per row: Type + Item -->
       <table id="tbl">
         <thead>
           <tr>
@@ -89,23 +99,21 @@
         </thead>
         <tbody id="rows"></tbody>
       </table>
-
-      <div class="footer-note">Data is saved in your browser (localStorage) as <span class="pill">obiri_menu</span>.</div>
+      <div class="footer-note">Data is saved in your <b>Google Sheet (cloud)</b> for OBÍRÍ. LocalStorage is NOT used.</div>
     </div>
   </div>
-
   <div id="toast" class="toast">Saved ✓</div>
-
 <script>
-  const STORAGE_KEY = 'obiri_menu';
+  // === Cloud integration settings ===
+  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzglCNUwMTg89aylX0vfv5_w9N1x2Ay1JKtNCq2AiP64vJ8ZuJjzaL9oHipM_-yJmxsww/exec';
+  const TOKEN = 'Forgive1988@';
 
-  // helpers
   const parseNaira  = s => Number(String(s).replace(/[^0-9]/g,'') || 0);
-  const load = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-  const save = data => localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  const toast = (m='Saved ✓') => { const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1200); };
+  let data = [];
+  let q = '';
+  let filterType = '';
 
-  // DRINKS catalog (optgroups → items)
+  // DRINKS CATALOG (use this!)
   const drinksCatalog = {
     'Beers / Stouts': [
       {name:'Big Beers / Stouts', price:2500},
@@ -196,29 +204,10 @@
     ]
   };
 
-  // FOOD catalog placeholder (add later when you share food items)
-  const foodCatalog = { };
-
-  // state
-  let data = load(); // [{id,type,cat,name,price,available}]
-  let q = '';
-  let filterType = '';
-
-  // seed: if empty create TWO neat rows (Drinks + Food)
-  if (!data.length){
-    data = [
-      {id:crypto.randomUUID(), type:'Drinks', cat:'', name:'', price:0, available:true},
-      {id:crypto.randomUUID(), type:'Food',   cat:'', name:'', price:0, available:true},
-    ];
-    save(data);
-  } else {
-    // ensure all rows have a 'type'
-    let changed=false;
-    for (const r of data){ if (!r.type){ r.type='Drinks'; changed=true; } }
-    if (changed) save(data);
-  }
+  const foodCatalog = {}; // Still empty for now
 
   const rowsEl = document.getElementById('rows');
+  const toast = (m='Saved ✓') => { const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1200); };
 
   function catalogForType(type){
     return type === 'Food' ? foodCatalog : drinksCatalog;
@@ -233,17 +222,16 @@
     });
     sel.onchange = e => {
       row.type = e.target.value;
-      row.cat = ''; row.name=''; row.price=0; // reset when changing type
-      save(data); render();
+      row.cat = ''; row.name=''; row.price=0;
+      saveToSheet();
+      render();
     };
     return sel;
   }
 
-  // Item dropdown (optgroups by category)
   function makeItemSelect(row){
     const sel = document.createElement('select');
     sel.appendChild(new Option('— pick item —', ''));
-
     const catalog = catalogForType(row.type);
     const cats = Object.keys(catalog);
 
@@ -264,28 +252,24 @@
       });
     }
     sel.appendChild(new Option('— Custom item… —','__custom__'));
-
     sel.onchange = () => {
       if (sel.value === '__custom__'){
         const customName = prompt('Enter custom item name');
         if (customName){
           row.name = customName; row.cat='(Custom)';
-          save(data); render();
+          saveToSheet();
+          render();
         } else { render(); }
         return;
       }
-      if (!sel.value){ row.name=''; row.cat=''; save(data); return; }
-
+      if (!sel.value){ row.name=''; row.cat=''; saveToSheet(); render(); return; }
       const [cat,name] = sel.value.split('|||');
       row.cat = cat; row.name = name;
-
-      // auto-fill default price
       const found = (catalog[cat]||[]).find(i=>i.name===name);
       if (found) row.price = Number(found.price)||0;
-
-      save(data); render();
+      saveToSheet();
+      render();
     };
-
     return sel;
   }
 
@@ -300,28 +284,25 @@
     rowsEl.innerHTML = '';
     for (const r of filtered){
       const tr = document.createElement('tr');
-
       const tdType  = document.createElement('td'); tdType.appendChild(makeTypeSelect(r));
-
       const tdItem  = document.createElement('td'); tdItem.appendChild(makeItemSelect(r));
 
-      // PRICE: normal typing (no auto-format while typing)
       const tdPrice = document.createElement('td'); tdPrice.className='right';
       const inPrice = document.createElement('input');
       inPrice.type='text'; inPrice.inputMode='numeric';
       inPrice.value = r.price ? String(r.price) : '';
       inPrice.placeholder = '0';
-      inPrice.oninput = e => { r.price = parseNaira(e.target.value); save(data); };
+      inPrice.oninput = e => { r.price = parseNaira(e.target.value); saveToSheet(); };
       tdPrice.appendChild(inPrice);
 
       const tdAvail = document.createElement('td'); tdAvail.className='center';
       const chk = document.createElement('input'); chk.type='checkbox'; chk.checked = !!r.available;
-      chk.onchange = e => { r.available = e.target.checked; save(data); };
+      chk.onchange = e => { r.available = e.target.checked; saveToSheet(); };
       tdAvail.appendChild(chk);
 
       const tdAct = document.createElement('td'); tdAct.className='right';
       const del = document.createElement('button'); del.className='del'; del.textContent='Delete';
-      del.onclick = () => { data = data.filter(x => x.id !== r.id); save(data); render(); };
+      del.onclick = () => { data = data.filter(x => x.id !== r.id); saveToSheet(); render(); };
       tdAct.appendChild(del);
 
       tr.append(tdType, tdItem, tdPrice, tdAvail, tdAct);
@@ -329,13 +310,49 @@
     }
   }
 
-  // actions
+  function loadFromSheet() {
+    fetch(`${ENDPOINT}?token=${TOKEN}`)
+      .then(res => res.json())
+      .then(result => {
+        if (result.ok && Array.isArray(result.rows)) {
+          data = result.rows.length
+            ? result.rows
+            : [
+                {id:crypto.randomUUID(), type:'Drinks', cat:'', name:'', price:0, available:true},
+                {id:crypto.randomUUID(), type:'Food',   cat:'', name:'', price:0, available:true}
+              ];
+          render();
+          toast('Loaded from sheet ✓');
+        } else {
+          toast('Error loading sheet!');
+        }
+      })
+      .catch(() => toast('Error (network) loading.'));
+  }
+
+  function saveToSheet() {
+    const form = new URLSearchParams();
+    form.append('token', TOKEN);
+    form.append('op', 'write');
+    form.append('rows', JSON.stringify(data));
+    fetch(ENDPOINT, {
+      method: 'POST',
+      body: form
+    }).then(res => res.json())
+      .then(result => {
+        if (result.ok) toast('Saved to sheet ✓');
+        else toast('Save error: '+result.error);
+      })
+      .catch(() => toast('Error (network) saving.'));
+  }
+
   document.getElementById('addItem').onclick = () => {
     const startType = filterType || 'Drinks';
     data.unshift({id:crypto.randomUUID(), type:startType, cat:'', name:'', price:0, available:true});
-    save(data); render();
+    saveToSheet();
+    render();
   };
-  document.getElementById('saveBtn').onclick = () => { save(data); toast('Saved ✓'); };
+  document.getElementById('saveBtn').onclick = () => { saveToSheet(); };
 
   document.getElementById('download').onclick = () => {
     const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
@@ -360,31 +377,41 @@
           price: Number(x.price)||0,
           available: !!x.available
         }));
-        save(data); render(); toast('Loaded ✓');
+        saveToSheet();
+        render();
+        toast('Loaded ✓');
       }catch(err){ alert('Could not load JSON: '+err.message); }
     };
     reader.readAsText(file); e.target.value='';
   };
 
   document.getElementById('clearAll').onclick = () => {
-    if(confirm('Clear ALL locally saved items?')){ data=[]; save(data); render(); toast('Cleared ✓'); }
+    if(confirm('Clear ALL menu items in Sheet (cloud)?')) {
+      data=[];
+      saveToSheet();
+      render();
+      toast('Cleared ✓');
+    }
   };
 
-  // NEW: Reset to exactly TWO neat rows (Drinks + Food)
   document.getElementById('resetTwo').onclick = () => {
-    if(confirm('Replace current items with 2 rows (Drinks + Food)?')){
+    if(confirm('Replace items with 2 rows (Drinks + Food)?')){
       data = [
         {id:crypto.randomUUID(), type:'Drinks', cat:'', name:'', price:0, available:true},
         {id:crypto.randomUUID(), type:'Food',   cat:'', name:'', price:0, available:true},
       ];
-      save(data); render(); toast('Ready ✓');
+      saveToSheet();
+      render();
+      toast('Ready ✓');
     }
   };
+  document.getElementById('reloadSheet').onclick = () => { loadFromSheet(); };
 
   document.getElementById('search').oninput = e => { q = e.target.value; render(); };
   document.getElementById('filterType').onchange = e => { filterType = e.target.value; render(); };
 
-  render();
+  // Always start: load from Google Sheet
+  loadFromSheet();
 </script>
 </body>
 </html>

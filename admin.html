@@ -5,11 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin — OBÍRÍ</title>
 
+  <!-- Keep admin pages out of search -->
+  <meta name="robots" content="noindex,nofollow">
+
+  <!-- Hide content until PIN check passes -->
+  <style>html.locked body{visibility:hidden}</style>
+  <script>document.documentElement.classList.add('locked');</script>
+
+  <!-- Global styles -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
+  <!-- Page-only styles (black & white) -->
   <style>
-    /* Black & white admin */
     body{
       background:#000 url('images/bg-admin.jpg') center / cover no-repeat fixed;
       color:#f2f2f2;
@@ -62,15 +70,35 @@
     }
     .back-link:hover{ text-decoration:underline; }
 
+    /* Remove special gold underline from globals on this page */
     .menu-banner + section > h2::after,
     .menu-banner + section > h3::after{ content:"" !important; }
   </style>
 </head>
 <body>
+  <!-- Simple PIN Gate (demo) -->
+  <script>
+    // CHANGE THIS PIN
+    const PIN = '0429';
+    const KEY = 'admin_ok'; // sessionStorage key
+
+    if (!sessionStorage.getItem(KEY)) {
+      const input = prompt('Enter admin PIN');
+      if (input === PIN) {
+        sessionStorage.setItem(KEY, '1');
+      } else {
+        location.replace('/');
+      }
+    }
+    document.documentElement.classList.remove('locked');
+  </script>
+
+  <!-- Header -->
   <header class="animate__animated animate__fadeInDown">
     <img src="images/obiri.png" alt="OBÍRÍ Logo" class="logo" />
   </header>
 
+  <!-- Banner -->
   <div class="menu-banner"><h2>ADMIN</h2></div>
   <div class="mini-note">Private area for managing menu & media</div>
 
