@@ -139,6 +139,30 @@
 
     /* >>> Ensure final row never hides behind the fixed bottom nav <<< */
     .contact-wrap{ padding-bottom: calc(var(--nav-h) + 28px); }
+
+    /* ===== Platform colors (added) ===== */
+    .btn-google{
+      background:#4285F4;
+      color:#fff;
+      box-shadow:0 4px 14px rgba(66,133,244,.35);
+    }
+    .btn-ig{
+      background:linear-gradient(45deg,#F58529,#FEDA77,#DD2A7B,#8134AF,#515BD4);
+      color:#fff;
+      box-shadow:0 4px 14px rgba(221,42,123,.35);
+    }
+    .btn-fb{
+      background:#1877F2;
+      color:#fff;
+      box-shadow:0 4px 14px rgba(24,119,242,.35);
+    }
+    /* Make floating WhatsApp & Call buttons WhatsApp green */
+    .float-actions a{
+      background:#25D366 !important;
+      color:#fff !important;
+      border-color:rgba(0,0,0,.12);
+      box-shadow:0 8px 22px rgba(37,211,102,.35);
+    }
   </style>
 </head>
 <body>
@@ -188,19 +212,19 @@
 
       <!-- Directions + social icons -->
       <div class="action-row">
-        <a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=111+woji+road+New+GRA%2C+Port+Harcourt" target="_blank" rel="noopener">
+        <a class="btn btn-google" href="https://www.google.com/maps/dir/?api=1&destination=111+woji+road+New+GRA%2C+Port+Harcourt" target="_blank" rel="noopener">
           Get Directions
         </a>
 
         <!-- Instagram -->
-        <a class="btn icon-btn" href="https://www.instagram.com/obiri_restaurant_lounge/" target="_blank" rel="noopener" aria-label="Instagram">
+        <a class="btn icon-btn btn-ig" href="https://www.instagram.com/obiri_restaurant_lounge/" target="_blank" rel="noopener" aria-label="Instagram">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm10 2H7a3 3 0 00-3 3v10a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3zm-5 3a5 5 0 110 10 5 5 0 010-10zm0 2.2a2.8 2.8 0 100 5.6 2.8 2.8 0 000-5.6zM18 6.5a1 1 0 110 2 1 1 0 010-2z"/>
           </svg>
         </a>
 
         <!-- Facebook -->
-        <a class="btn icon-btn" href="https://web.facebook.com/p/Obiri-Restaurant-lounge-61556886497712/?_rdc=1&_rdr#" target="_blank" rel="noopener" aria-label="Facebook">
+        <a class="btn icon-btn btn-fb" href="https://web.facebook.com/p/Obiri-Restaurant-lounge-61556886497712/?_rdc=1&_rdr#" target="_blank" rel="noopener" aria-label="Facebook">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M22 12.07C22 6.48 17.52 2 11.93 2 6.35 2 1.87 6.48 1.87 12.07c0 4.98 3.64 9.12 8.4 9.93v-7.02H7.96v-2.9h2.31V9.83c0-2.28 1.36-3.54 3.44-3.54.99 0 2.02.18 2.02.18v2.23h-1.14c-1.12 0-1.47.7-1.47 1.41v1.69h2.5l-.4 2.9h-2.1V22c4.76-.81 8.41-4.95 8.41-9.93z"/>
           </svg>
