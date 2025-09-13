@@ -21,6 +21,18 @@
     .menu-toggle a:active{ transform:scale(.98); box-shadow:inset 0 -2px 0 var(--gold-mid),0 0 10px rgba(232,193,49,.45); }
     .menu-toggle .label-main{ display:block; font-size:0.95rem; line-height:1; }
     .food-grid .food-card.grouped{ order:-1; }
+    .soldout-label {
+      color: #fff;
+      background: #d91e1e;
+      border-radius: 0.35em;
+      padding: 0.07em 0.5em;
+      font-weight: bold;
+      margin-left: 0.6em;
+      font-size: 0.97em;
+      vertical-align: middle;
+      display: inline-block;
+    }
+    .food-card.soldout { opacity: 0.48; }
   </style>
 </head>
 <body>
@@ -38,56 +50,56 @@
         Beers / Stouts
       </h3>
       <div class="food-grid">
-        <div class="food-card grouped">
+        <div class="food-card grouped" id="card-big-beers-stouts">
           <img src="images/obiri-beer-big.jpg" alt="All Big Beers & Stouts" />
           <div class="food-info">
             <h4>Big Beers / Stouts</h4>
             <p id="price-big-beers-stouts"></p>
           </div>
         </div>
-        <div class="food-card grouped">
+        <div class="food-card grouped" id="card-small-beers-stouts">
           <img src="images/obiri-beer-small.jpg" alt="All Small Beers & Stouts" />
           <div class="food-info">
             <h4>Small Beers / Stouts</h4>
             <p id="price-small-beers-stouts"></p>
           </div>
         </div>
-        <div class="food-card">
+        <div class="food-card" id="card-star-radler">
           <img src="images/obiri-star-radler.jpg" alt="Star Radler" />
           <div class="food-info">
             <h4>Star Radler</h4>
             <p id="price-star-radler"></p>
           </div>
         </div>
-        <div class="food-card">
+        <div class="food-card" id="card-desperados">
           <img src="images/obiri-desperados.jpg" alt="Desperados" />
           <div class="food-info">
             <h4>Desperados</h4>
             <p id="price-desperados"></p>
           </div>
         </div>
-        <div class="food-card">
+        <div class="food-card" id="card-flying-fish">
           <img src="images/obiri-flying-fish.jpg" alt="Flying Fish" />
           <div class="food-info">
             <h4>Flying Fish</h4>
             <p id="price-flying-fish"></p>
           </div>
         </div>
-        <div class="food-card">
+        <div class="food-card" id="card-legend-twist">
           <img src="images/obiri-legend-twist.jpg" alt="Legend Twist" />
           <div class="food-info">
             <h4>Legend Twist</h4>
             <p id="price-legend-twist"></p>
           </div>
         </div>
-        <div class="food-card">
+        <div class="food-card" id="card-smirnoff-ice-small">
           <img src="images/obiri-smirnoff-small.jpg" alt="Smirnoff Ice (Small)" />
           <div class="food-info">
             <h4>Smirnoff Ice (Small)</h4>
             <p id="price-smirnoff-ice-small"></p>
           </div>
         </div>
-        <div class="food-card">
+        <div class="food-card" id="card-smirnoff-ice-double-black">
           <img src="images/obiri-smirnoff-double-black.jpg" alt="Smirnoff Ice (Double Black)" />
           <div class="food-info">
             <h4>Smirnoff Ice (Double Black)</h4>
@@ -119,7 +131,15 @@
         .replace(/-+/g,'-')
         .toLowerCase()).replace(/-$/, '');
     }
+    function getCardIdFromName(name) {
+      return ('card-' + name
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]/gi,'-')
+        .replace(/-+/g,'-')
+        .toLowerCase()).replace(/-$/, '');
+    }
     window.getIdFromName = getIdFromName;
+
 
     function injectPrices() {
       fetch(`${ENDPOINT}?token=${TOKEN}`)
@@ -127,10 +147,26 @@
         .then(result => {
           if(result.ok) {
             result.rows.forEach(item => {
-              if(item.type==="Drinks" && item.cat && item.cat.toLowerCase().includes("beer") && item.available && item.name) {
-                let id = getIdFromName(item.name);
-                let elem = document.getElementById(id);
-                if(elem) elem.textContent = formatNaira(item.price);
+              if(
+                item.type==="Drinks" &&
+                item.cat &&
+                item.cat.toLowerCase().includes("beer") &&
+                item.name
+              ) {
+                let priceId = getIdFromName(item.name);
+                let cardId = getCardIdFromName(item.name);
+                let priceElem = document.getElementById(priceId);
+                let cardElem = document.getElementById(cardId);
+                if(priceElem && cardElem) {
+                  priceElem.innerHTML = '';
+                  cardElem.classList.remove('soldout');
+                  if(item.available === true) {
+                    priceElem.textContent = formatNaira(item.price);
+                  } else {
+                    priceElem.innerHTML = `${formatNaira(item.price)} <span class="soldout-label">Sold Out</span>`;
+                    cardElem.classList.add('soldout');
+                  }
+                }
               }
             });
           }

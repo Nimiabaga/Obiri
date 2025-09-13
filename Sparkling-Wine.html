@@ -20,6 +20,18 @@
     .menu-toggle a:hover{ box-shadow:0 0 10px rgba(232,193,49,.22); }
     .menu-toggle a:active{ transform:scale(.98); box-shadow:inset 0 -2px 0 var(--gold-mid),0 0 10px rgba(232,193,49,.45); }
     .menu-toggle .label-main{ display:block; font-size:0.95rem; line-height:1; }
+    .soldout-label {
+      color: #fff;
+      background: #d91e1e;
+      border-radius: 0.35em;
+      padding: 0.07em 0.5em;
+      font-weight: bold;
+      margin-left: 0.6em;
+      font-size: 0.97em;
+      vertical-align: middle;
+      display: inline-block;
+    }
+    .food-card.soldout { opacity: 0.48; }
   </style>
 </head>
 <body>
@@ -27,36 +39,33 @@
   <header class="animate__animated animate__fadeInDown">
     <img src="images/obiri.png" alt="OBÍRÍ Restaurant & Lounge Logo" class="logo" />
   </header>
-
   <!-- Banner -->
   <div class="menu-banner"><h2>DRINKS MENU</h2></div>
-
   <!-- Quick jump back to Drinks -->
   <nav class="menu-toggle" aria-label="Back to Drinks">
     <a href="./drinks.html"><span class="label-main">← Back to Drinks</span></a>
   </nav>
-
   <main>
     <section class="section active" aria-labelledby="sparkling-title">
       <h3 id="sparkling-title" class="hero-title" style="text-align:center; margin:0 0 1rem;">
         Sparkling Wine
       </h3>
       <div class="food-grid">
-        <div class="food-card">
+        <div class="food-card" id="card-andre-rose">
           <img src="images/obiri-andre-rose.jpg" alt="Andre Rose sparkling wine" />
           <div class="food-info">
             <h4>Andre Rose</h4>
             <p id="price-andre-rose"></p>
           </div>
         </div>
-        <div class="food-card">
+        <div class="food-card" id="card-andre-brut">
           <img src="images/obiri-andre-brut.jpg" alt="Andre Brut sparkling wine" />
           <div class="food-info">
             <h4>Andre Brut</h4>
             <p id="price-andre-brut"></p>
           </div>
         </div>
-        <div class="food-card">
+        <div class="food-card" id="card-martini-rose">
           <img src="images/obiri-martini-rose.jpg" alt="Martini Rose sparkling wine" />
           <div class="food-info">
             <h4>Martini Rose</h4>
@@ -67,7 +76,6 @@
     </section>
     <div class="tray-note">Takeout ₦500</div>
   </main>
-
   <!-- Bottom Navigation -->
   <nav class="bottom-nav" aria-label="Primary">
     <a href="./index.html">Home</a>
@@ -84,7 +92,18 @@
       return '₦' + Number(amount).toLocaleString();
     }
     function getIdFromName(name) {
-      return 'price-' + name.replace(/\s+\(.*\)/, '').replace(/[^a-z0-9]/gi,'-').replace(/-+/g,'-').toLowerCase();
+      return ('price-' + name
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]/gi,'-')
+        .replace(/-+/g,'-')
+        .toLowerCase()).replace(/-$/, '');
+    }
+    function getCardIdFromName(name) {
+      return ('card-' + name
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]/gi,'-')
+        .replace(/-+/g,'-')
+        .toLowerCase()).replace(/-$/, '');
     }
     function injectPrices() {
       fetch(`${ENDPOINT}?token=${TOKEN}`)
@@ -92,10 +111,26 @@
         .then(result => {
           if(result.ok) {
             result.rows.forEach(item => {
-              if(item.type==="Drinks" && item.cat && item.cat.toLowerCase().includes("sparkling") && item.available && item.name) {
-                let id = getIdFromName(item.name);
-                let elem = document.getElementById(id);
-                if(elem) elem.textContent = formatNaira(item.price);
+              if(
+                item.type === 'Drinks' &&
+                item.cat &&
+                item.cat.toLowerCase().includes('sparkling') &&
+                item.name
+              ) {
+                let priceId = getIdFromName(item.name);
+                let cardId = getCardIdFromName(item.name);
+                let priceElem = document.getElementById(priceId);
+                let cardElem = document.getElementById(cardId);
+                if(priceElem && cardElem) {
+                  priceElem.innerHTML = '';
+                  cardElem.classList.remove('soldout');
+                  if(item.available === true) {
+                    priceElem.textContent = formatNaira(item.price);
+                  } else {
+                    priceElem.innerHTML = `${formatNaira(item.price)} <span class="soldout-label">Sold Out</span>`;
+                    cardElem.classList.add('soldout');
+                  }
+                }
               }
             });
           }

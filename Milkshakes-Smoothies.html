@@ -34,6 +34,18 @@
     .sublist li.note{
       list-style:none; padding-left:0; margin-top:.25rem; color:var(--muted);
     }
+    .soldout-label {
+      color: #fff;
+      background: #d91e1e;
+      border-radius: 0.35em;
+      padding: 0.07em 0.5em;
+      font-weight: bold;
+      margin-left: 0.6em;
+      font-size: 0.97em;
+      vertical-align: middle;
+      display: inline-block;
+    }
+    .food-card.soldout { opacity: 0.48; }
   </style>
 </head>
 <body>
@@ -46,7 +58,7 @@
   </nav>
   <main>
     <div class="food-grid">
-      <div class="food-card">
+      <div class="food-card" id="card-milkshakes">
         <img src="images/obiri-milkshake.jpg" alt="Milkshakes" />
         <div class="food-info">
           <h4>Milkshakes</h4>
@@ -62,7 +74,7 @@
           </ul>
         </div>
       </div>
-      <div class="food-card">
+      <div class="food-card" id="card-smoothies">
         <img src="images/obiri-smoothies.jpg" alt="Smoothies" />
         <div class="food-info">
           <h4>Smoothies</h4>
@@ -95,7 +107,18 @@
       return '₦' + Number(amount).toLocaleString();
     }
     function getIdFromName(name) {
-      return 'price-' + name.replace(/\s+\(.*\)/, '').replace(/[^a-z0-9]/gi,'-').replace(/-+/g,'-').toLowerCase();
+      return ('price-' + name
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]/gi,'-')
+        .replace(/-+/g,'-')
+        .toLowerCase()).replace(/-$/, '');
+    }
+    function getCardIdFromName(name) {
+      return ('card-' + name
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]/gi,'-')
+        .replace(/-+/g,'-')
+        .toLowerCase()).replace(/-$/, '');
     }
     function injectPrices() {
       fetch(`${ENDPOINT}?token=${TOKEN}`)
@@ -103,12 +126,26 @@
         .then(result => {
           if(result.ok) {
             result.rows.forEach(item => {
-              if(item.type==="Drinks" && item.cat &&
-                 (item.cat.toLowerCase().includes("milkshake") || item.cat.toLowerCase().includes("smoothie"))
-                 && item.available && item.name) {
-                let id = getIdFromName(item.name);
-                let elem = document.getElementById(id);
-                if(elem) elem.textContent = formatNaira(item.price);
+              if(
+                item.type === 'Drinks' &&
+                item.cat &&
+                (item.cat.toLowerCase().includes("milkshake") || item.cat.toLowerCase().includes("smoothie")) &&
+                item.name
+              ) {
+                let priceId = getIdFromName(item.name);
+                let cardId = getCardIdFromName(item.name);
+                let priceElem = document.getElementById(priceId);
+                let cardElem = document.getElementById(cardId);
+                if(priceElem && cardElem) {
+                  priceElem.innerHTML = '';
+                  cardElem.classList.remove('soldout');
+                  if(item.available === true) {
+                    priceElem.textContent = formatNaira(item.price);
+                  } else {
+                    priceElem.innerHTML = `${formatNaira(item.price)} <span class="soldout-label">Sold Out</span>`;
+                    cardElem.classList.add('soldout');
+                  }
+                }
               }
             });
           }
