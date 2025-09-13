@@ -4,14 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Food — OBÍRÍ</title>
-
-  <!-- Global styles -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-
-  <!-- Food page–only tweaks (kept minimal; fixed selector) -->
   <style>
-    /* Category chips layout on this page */
     .menu-toggle{
       display:flex;
       justify-content:center;
@@ -21,8 +16,6 @@
       max-width:980px;
       padding:0 .6rem;
     }
-
-    /* stacked label: main / nickname */
     .menu-toggle a{
       padding:.55rem 1rem;
       border-radius:8px;
@@ -41,12 +34,9 @@
     }
     .menu-toggle a:hover{ box-shadow:0 0 10px rgba(232,193,49,.22); }
     .menu-toggle a:active{ transform:scale(.98); box-shadow:inset 0 -2px 0 var(--gold-mid),0 0 10px rgba(232,193,49,.45); }
-
     .menu-toggle .label-main{ display:block; font-size:0.95rem; line-height:1; }
     .menu-toggle .label-sub{ display:block; font-size:0.78rem; font-weight:700; color:var(--muted); opacity:.95; }
-
     .food-info p small{ font-weight:600; opacity:.9; }
-    /* fixed selector (had missing dot previously) */
     .menu-toggle a:active::after{ opacity:1 }
   </style>
 </head>
@@ -56,14 +46,11 @@
   </header>
 
   <div class="menu-banner"><h2>FOOD MENU</h2></div>
-
   <nav class="menu-toggle" role="navigation" aria-label="Food categories">
-    <!-- FIXED LINK BELOW: soup.html -> Soup-Mini-Wiri.html -->
     <a href="./Soup-Mini-Wiri.html">
       <span class="label-main">Soups</span>
       <span class="label-sub">(Mini-wiri)</span>
     </a>
-    <!-- FIXED CASE: proteins.html -> Proteins.html -->
     <a href="./Proteins.html"><span class="label-main">Proteins</span></a>
     <a href="./Pepper-dem-Anu-Gworogwu.html">
       <span class="label-main">PEPPER DEM</span>
@@ -78,8 +65,8 @@
       <span class="label-main">Pepper Soup</span>
       <span class="label-sub">(Mini-wiri Gorogoro)</span>
     </a>
-    <a href="./barbeque.html"><span class="label-main">Barbeque</span></a>
-    <a href="./swallow-otara.html">
+    <a href="./Barbeque.html"><span class="label-main">Barbeque</span></a>
+    <a href="./Swallow-otara.html">
       <span class="label-main">Swallow</span>
       <span class="label-sub">(Otara)</span>
     </a>
@@ -92,65 +79,72 @@
         <img src="images/obiri-isiewu.jpg" alt="Isiewu" />
         <div class="food-info">
           <h4>Isiewu</h4>
-          <p>₦12,000</p>
+          <p id="price-isiewu"></p>
         </div>
       </div>
-
       <!-- Bayelsa Suya -->
       <div class="food-card">
         <img src="images/obiri-bayelsa-suya.jpg" alt="Bayelsa Suya" />
         <div class="food-info">
           <h4>Bayelsa Suya</h4>
-          <p>₦7,000</p>
+          <p id="price-bayelsa-suya"></p>
         </div>
       </div>
-
       <!-- Bush Meat -->
       <div class="food-card">
-        <img src="images/obiri-bush-meat.jpg" alt="Bush Meat" />
+        <img src="images/obiri-bush-meat.jpg" alt="BushMeat" />
         <div class="food-info">
-          <h4>Bush Meat</h4>
-          <p>₦10,000</p>
+          <h4>BushMeat</h4>
+          <p id="price-bushmeat"></p>
         </div>
       </div>
-
       <!-- Abacha -->
       <div class="food-card">
         <img src="images/obiri-abacha.jpg" alt="Abacha" />
         <div class="food-info">
           <h4>Abacha</h4>
-          <p>₦6,000</p>
+          <p id="price-abacha"></p>
         </div>
       </div>
     </div>
-
     <div class="tray-note">Takeout ₦500</div>
   </main>
-  
-  <!-- Bottom Navigation -->
   <nav class="bottom-nav" aria-label="Primary">
     <a href="./index.html">Home</a>
     <a href="./food.html" class="active">Food</a>
     <a href="./drinks.html">Drinks</a>
     <a href="./contact.html">Contact</a>
   </nav>
-
-  <!-- Optional interaction (unchanged) -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const cards = document.querySelectorAll('.food-card');
-      cards.forEach(card => {
-        const rect = card.getBoundingClientRect();
-        card.addEventListener('mousemove', e => {
-          card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
-          card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
+    const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzglCNUwMTg89aylX0vfv5_w9N1x2Ay1JKtNCq2AiP64vJ8ZuJjzaL9oHipM_-yJmxsww/exec';
+    const TOKEN = 'Forgive1988@';
+    function formatNaira(amount) {
+      if(!amount || isNaN(amount)) return '₦0';
+      return '₦' + Number(amount).toLocaleString();
+    }
+    function getIdFromName(name) {
+      return ('price-' + name)
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]/gi,'-')
+        .replace(/-+/g,'-')
+        .toLowerCase().replace(/-$/, '');
+    }
+    function injectPrices() {
+      fetch(`${ENDPOINT}?token=${TOKEN}`)
+        .then(res => res.json())
+        .then(result => {
+          if(result.ok) {
+            result.rows.forEach(item => {
+              if(item.type === 'Food' && item.available && item.name) {
+                let id = getIdFromName(item.name);
+                let elem = document.getElementById(id);
+                if(elem) elem.textContent = formatNaira(item.price);
+              }
+            });
+          }
         });
-        card.addEventListener('mouseleave', () => {
-          card.style.removeProperty('--mouse-x');
-          card.style.removeProperty('--mouse-y');
-        });
-      });
-    });
+    }
+    document.addEventListener('DOMContentLoaded', injectPrices);
   </script>
 </body>
 </html>

@@ -4,12 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Milkshakes & Smoothies — OBÍRÍ</title>
-
-  <!-- Global styles -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-
-  <!-- Page-only tweaks (kept minimal) -->
   <style>
     .menu-toggle{
       display:flex; justify-content:center; gap:.6rem; flex-wrap:wrap;
@@ -23,18 +19,16 @@
     .menu-toggle a:hover{ box-shadow:0 0 10px rgba(232,193,49,.22); }
     .menu-toggle .label-main{ display:block; font-size:0.95rem; line-height:1; }
     .menu-toggle .label-sub{ display:block; font-size:0.78rem; font-weight:700; color:var(--muted); opacity:.95; }
-
-    /* page-only styling for the flavor lists */
     .sublist{
       margin:.35rem .75rem .2rem;
-      padding-left:1.1rem;      /* space for bullets */
+      padding-left:1.1rem;
       text-align:left;
       list-style:disc;
     }
     .sublist li{
       margin:.14rem 0;
       font-size:.82rem;
-      color:#d9d9da;            /* readable on dark */
+      color:#d9d9da;
       opacity:.9;
     }
     .sublist li.note{
@@ -46,22 +40,17 @@
   <header class="animate__animated animate__fadeInDown">
     <img src="images/obiri.png" alt="OBÍRÍ Restaurant & Lounge Logo" class="logo" />
   </header>
-
   <div class="menu-banner"><h2>MILKSHAKES & SMOOTHIES</h2></div>
-
-  <!-- Quick jump back to Drinks -->
   <nav class="menu-toggle" aria-label="Back to Drinks">
     <a href="./drinks.html"><span class="label-main">← Back to Drinks</span></a>
   </nav>
-
   <main>
     <div class="food-grid">
-      <!-- Milkshakes — ₦8,900 -->
       <div class="food-card">
         <img src="images/obiri-milkshake.jpg" alt="Milkshakes" />
         <div class="food-info">
           <h4>Milkshakes</h4>
-          <p>₦8,900</p>
+          <p id="price-milkshakes"></p>
           <ul class="sublist">
             <li>Amarula</li>
             <li>Banana</li>
@@ -73,13 +62,11 @@
           </ul>
         </div>
       </div>
-
-      <!-- Smoothies — (same price for now) -->
       <div class="food-card">
         <img src="images/obiri-smoothies.jpg" alt="Smoothies" />
         <div class="food-info">
           <h4>Smoothies</h4>
-          <p>₦8,900</p>
+          <p id="price-smoothies"></p>
           <ul class="sublist">
             <li>Coconut</li>
             <li>Pineapple</li>
@@ -92,15 +79,42 @@
         </div>
       </div>
     </div>
-
     <div class="tray-note">Takeout ₦500</div>
   </main>
-
   <nav class="bottom-nav" aria-label="Primary">
     <a href="./index.html">Home</a>
     <a href="./food.html">Food</a>
     <a href="./drinks.html" class="active">Drinks</a>
     <a href="./contact.html">Contact</a>
   </nav>
+  <script>
+    const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzglCNUwMTg89aylX0vfv5_w9N1x2Ay1JKtNCq2AiP64vJ8ZuJjzaL9oHipM_-yJmxsww/exec';
+    const TOKEN = 'Forgive1988@';
+    function formatNaira(amount) {
+      if(!amount || isNaN(amount)) return '₦0';
+      return '₦' + Number(amount).toLocaleString();
+    }
+    function getIdFromName(name) {
+      return 'price-' + name.replace(/\s+\(.*\)/, '').replace(/[^a-z0-9]/gi,'-').replace(/-+/g,'-').toLowerCase();
+    }
+    function injectPrices() {
+      fetch(`${ENDPOINT}?token=${TOKEN}`)
+        .then(res => res.json())
+        .then(result => {
+          if(result.ok) {
+            result.rows.forEach(item => {
+              if(item.type==="Drinks" && item.cat &&
+                 (item.cat.toLowerCase().includes("milkshake") || item.cat.toLowerCase().includes("smoothie"))
+                 && item.available && item.name) {
+                let id = getIdFromName(item.name);
+                let elem = document.getElementById(id);
+                if(elem) elem.textContent = formatNaira(item.price);
+              }
+            });
+          }
+        });
+    }
+    document.addEventListener('DOMContentLoaded', injectPrices);
+  </script>
 </body>
 </html>

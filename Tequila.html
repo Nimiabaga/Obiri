@@ -4,12 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tequila — OBÍRÍ</title>
-
-  <!-- Global styles -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-
-  <!-- Page-only tweaks (same pattern as drinks pages) -->
   <style>
     .menu-toggle{
       display:flex;
@@ -63,28 +59,23 @@
       <h3 id="tequila-title" class="hero-title" style="text-align:center; margin:0 0 1rem;">
         Tequila
       </h3>
-
       <div class="food-grid">
-        <!-- Shot — ₦2,000 -->
         <div class="food-card">
           <img src="images/obiri-tequila-shot.jpg" alt="Tequila Shot" />
           <div class="food-info">
             <h4>Shot</h4>
-            <p>₦2,000</p>
+            <p id="price-shot"></p>
           </div>
         </div>
-
-        <!-- Bottle — ₦45,000 -->
         <div class="food-card">
           <img src="images/obiri-tequila-bottle.jpg" alt="Tequila Bottle" />
           <div class="food-info">
             <h4>Bottle</h4>
-            <p>₦45,000</p>
+            <p id="price-bottle"></p>
           </div>
         </div>
       </div>
     </section>
-
     <div class="tray-note">Takeout ₦500</div>
   </main>
 
@@ -96,7 +87,7 @@
     <a href="./contact.html">Contact</a>
   </nav>
 
-  <!-- Hover script -->
+  <!-- Hover script (unchanged) -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const cards = document.querySelectorAll('.food-card');
@@ -112,6 +103,33 @@
         });
       });
     });
+
+    // === LIVE PRICE INJECTION ===
+    const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzglCNUwMTg89aylX0vfv5_w9N1x2Ay1JKtNCq2AiP64vJ8ZuJjzaL9oHipM_-yJmxsww/exec';
+    const TOKEN = 'Forgive1988@';
+    function formatNaira(amount) {
+      if(!amount || isNaN(amount)) return '₦0';
+      return '₦' + Number(amount).toLocaleString();
+    }
+    function getIdFromName(name) {
+      return 'price-' + name.replace(/\s+\(.*\)/, '').replace(/[^a-z0-9]/gi,'-').replace(/-+/g,'-').toLowerCase();
+    }
+    function injectPrices() {
+      fetch(`${ENDPOINT}?token=${TOKEN}`)
+        .then(res => res.json())
+        .then(result => {
+          if(result.ok) {
+            result.rows.forEach(item => {
+              if(item.type==="Drinks" && item.cat && item.cat.toLowerCase().includes("tequila") && item.available && item.name) {
+                let id = getIdFromName(item.name);
+                let elem = document.getElementById(id);
+                if(elem) elem.textContent = formatNaira(item.price);
+              }
+            });
+          }
+        });
+    }
+    document.addEventListener('DOMContentLoaded', injectPrices);
   </script>
 </body>
 </html>

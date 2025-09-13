@@ -4,12 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Champagne — OBÍRÍ</title>
-
-  <!-- Global styles -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-
-  <!-- Page-only tweaks (same pattern as other drinks pages) -->
   <style>
     .menu-toggle{
       display:flex; justify-content:center; gap:.6rem; flex-wrap:wrap;
@@ -24,7 +20,6 @@
     .menu-toggle a:hover{ box-shadow:0 0 10px rgba(232,193,49,.22); }
     .menu-toggle a:active{ transform:scale(.98); box-shadow:inset 0 -2px 0 var(--gold-mid),0 0 10px rgba(232,193,49,.45); }
     .menu-toggle .label-main{ display:block; font-size:0.95rem; line-height:1; }
-
     .food-info p small{ font-weight:600; opacity:.9; }
     .menu-toggle a:active::after{ opacity:1 }
   </style>
@@ -34,79 +29,93 @@
   <header class="animate__animated animate__fadeInDown">
     <img src="images/obiri.png" alt="OBÍRÍ Restaurant & Lounge Logo" class="logo" />
   </header>
-
-  <!-- Banner -->
   <div class="menu-banner"><h2>DRINKS MENU</h2></div>
-
-  <!-- Quick jump back to Drinks -->
   <nav class="menu-toggle" aria-label="Back to Drinks">
     <a href="./drinks.html"><span class="label-main">← Back to Drinks</span></a>
   </nav>
-
-
   <main>
     <section class="section active" aria-labelledby="champagne-title">
       <h3 id="champagne-title" class="hero-title" style="text-align:center; margin:0 0 1rem;">
         Champagne
       </h3>
-
       <div class="food-grid">
-        <!-- Don P — ₦850,000 -->
         <div class="food-card">
           <img src="images/obiri-don-p.jpg" alt="Don P" />
           <div class="food-info">
             <h4>Don P</h4>
-            <p>₦850,000</p>
+            <p id="price-don-p"></p>
           </div>
         </div>
-
-        <!-- Veuve Rich — ₦250,000 -->
         <div class="food-card">
           <img src="images/obiri-veuve-rich.jpg" alt="Veuve Rich" />
           <div class="food-info">
             <h4>Veuve Rich</h4>
-            <p>₦250,000</p>
+            <p id="price-veuve-rich"></p>
           </div>
         </div>
-
-        <!-- Moët Rich — ₦190,000 -->
         <div class="food-card">
           <img src="images/obiri-moet-rich.jpg" alt="Moët Rich" />
           <div class="food-info">
             <h4>Moët Rich</h4>
-            <p>₦190,000</p>
+            <p id="price-moet-rich"></p>
           </div>
         </div>
-
-        <!-- Veuve Clicquot Brut — ₦170,000 -->
         <div class="food-card">
           <img src="images/obiri-veuve-clicquot-brut.jpg" alt="Veuve Clicquot Brut" />
           <div class="food-info">
             <h4>Veuve Clicquot Brut</h4>
-            <p>₦170,000</p>
+            <p id="price-veuve-clicquot-brut"></p>
           </div>
         </div>
-
-        <!-- Belaire — ₦100,000 -->
         <div class="food-card">
           <img src="images/obiri-belaire.jpg" alt="Belaire" />
           <div class="food-info">
             <h4>Belaire</h4>
-            <p>₦100,000</p>
+            <p id="price-belaire"></p>
           </div>
         </div>
       </div>
     </section>
-
     <div class="tray-note">Takeout ₦500</div>
   </main>
-
-  <!-- Bottom Navigation -->
   <nav class="bottom-nav" aria-label="Primary">
     <a href="./index.html">Home</a>
     <a href="./food.html">Food</a>
     <a href="./drinks.html" class="active">Drinks</a>
     <a href="./contact.html">Contact</a>
   </nav>
+  <script>
+    const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzglCNUwMTg89aylX0vfv5_w9N1x2Ay1JKtNCq2AiP64vJ8ZuJjzaL9oHipM_-yJmxsww/exec';
+    const TOKEN = 'Forgive1988@';
+    function formatNaira(amount) {
+      if(!amount || isNaN(amount)) return '₦0';
+      return '₦' + Number(amount).toLocaleString();
+    }
+    // UPDATED: Normalize accents for id matching!
+    function getIdFromName(name) {
+      return 'price-' + name
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+\(.*\)/, '')
+        .replace(/[^a-z0-9]/gi,'-')
+        .replace(/-+/g,'-')
+        .toLowerCase();
+    }
+    function injectPrices() {
+      fetch(`${ENDPOINT}?token=${TOKEN}`)
+        .then(res => res.json())
+        .then(result => {
+          if(result.ok) {
+            result.rows.forEach(item => {
+              if(item.type === 'Drinks' && item.cat && item.cat.toLowerCase().includes("champagne") && item.available && item.name) {
+                let id = getIdFromName(item.name);
+                let elem = document.getElementById(id);
+                if(elem) elem.textContent = formatNaira(item.price);
+              }
+            });
+          }
+        });
+    }
+    document.addEventListener('DOMContentLoaded', injectPrices);
+  </script>
 </body>
 </html>

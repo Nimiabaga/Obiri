@@ -4,12 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Softs & Water — OBÍRÍ</title>
-
-  <!-- Global styles -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-
-  <!-- Page-only tweaks (same pattern as drinks pages) -->
   <style>
     .menu-toggle{
       display:flex;
@@ -49,11 +45,8 @@
   <header class="animate__animated animate__fadeInDown">
     <img src="images/obiri.png" alt="OBÍRÍ Restaurant & Lounge Logo" class="logo" />
   </header>
-
   <!-- Banner -->
   <div class="menu-banner"><h2>DRINKS MENU</h2></div>
-
-  <!-- Drink categories -->
   <nav class="menu-toggle" role="navigation" aria-label="Drink categories">
     <a href="./Beers-Stouts.html"><span class="label-main">Beers / Stouts</span></a>
     <a href="./Gin.html"><span class="label-main">Gin</span></a>
@@ -68,101 +61,80 @@
     <a href="./Whiskey.html"><span class="label-main">Whiskey</span></a>
     <a href="./Champagne.html"><span class="label-main">Champagne</span></a>
   </nav>
-
   <main>
     <section class="section active" aria-labelledby="softs-water-title">
       <h3 id="softs-water-title" class="hero-title" style="text-align:center; margin:0 0 1rem;">
         Softs & Water
       </h3>
-
       <div class="food-grid">
-        <!-- Chi-Active — ₦3,000 -->
         <div class="food-card">
           <img src="images/obiri-chi-active.jpg" alt="Chi-Active" />
           <div class="food-info">
             <h4>Chi-Active</h4>
-            <p>₦3,000</p>
+            <p id="price-chi-active"></p>
           </div>
         </div>
-
-        <!-- Chivita Exotic — ₦3,000 -->
         <div class="food-card">
           <img src="images/obiri-chivita-exotic.jpg" alt="Chivita Exotic" />
           <div class="food-info">
             <h4>Chivita Exotic</h4>
-            <p>₦3,000</p>
+            <p id="price-chivita-exotic"></p>
           </div>
         </div>
-
-        <!-- Coke / Fanta / Sprite — ₦1,040 -->
         <div class="food-card">
           <img src="images/obiri-coke-fanta-sprite.jpg" alt="Coke / Fanta / Sprite" />
           <div class="food-info">
             <h4>Coke / Fanta / Sprite</h4>
-            <p>₦1,040</p>
+            <p id="price-coke-fanta-sprite"></p>
           </div>
         </div>
-
-        <!-- Fayrouz — ₦1,040 -->
         <div class="food-card">
           <img src="images/obiri-fayrouz.jpg" alt="Fayrouz" />
           <div class="food-info">
             <h4>Fayrouz</h4>
-            <p>₦1,040</p>
+            <p id="price-fayrouz"></p>
           </div>
         </div>
-
-        <!-- Hollandia — ₦3,000 -->
         <div class="food-card">
           <img src="images/obiri-hollandia.jpg" alt="Hollandia" />
           <div class="food-info">
             <h4>Hollandia</h4>
-            <p>₦3,000</p>
+            <p id="price-hollandia"></p>
           </div>
         </div>
-
-        <!-- Water — ₦600 -->
         <div class="food-card">
           <img src="images/obiri-water.jpg" alt="Water" />
           <div class="food-info">
             <h4>Water</h4>
-            <p>₦600</p>
+            <p id="price-water"></p>
           </div>
         </div>
-
-        <!-- Schweppes — ₦1,040 -->
         <div class="food-card">
           <img src="images/obiri-schweppes.jpg" alt="Schweppes" />
           <div class="food-info">
             <h4>Schweppes</h4>
-            <p>₦1,040</p>
+            <p id="price-schweppes"></p>
           </div>
         </div>
-
-        <!-- Malts — ₦1,040 -->
         <div class="food-card">
           <img src="images/obiri-malts.jpg" alt="Malts" />
           <div class="food-info">
             <h4>Malts</h4>
-            <p>₦1,040</p>
+            <p id="price-malts"></p>
           </div>
         </div>
       </div>
     </section>
-
     <div class="tray-note">Takeout ₦500</div>
   </main>
-
-  <!-- Bottom Navigation -->
   <nav class="bottom-nav" aria-label="Primary">
     <a href="./index.html">Home</a>
     <a href="./food.html">Food</a>
     <a href="./drinks.html" class="active">Drinks</a>
     <a href="./contact.html">Contact</a>
   </nav>
-
-  <!-- Hover script -->
   <script>
+    // Keep your hover script
     document.addEventListener('DOMContentLoaded', () => {
       const cards = document.querySelectorAll('.food-card');
       cards.forEach(card => {
@@ -177,7 +149,32 @@
         });
       });
     });
+    // Price injection
+    const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzglCNUwMTg89aylX0vfv5_w9N1x2Ay1JKtNCq2AiP64vJ8ZuJjzaL9oHipM_-yJmxsww/exec';
+    const TOKEN = 'Forgive1988@';
+    function formatNaira(amount) {
+      if(!amount || isNaN(amount)) return '₦0';
+      return '₦' + Number(amount).toLocaleString();
+    }
+    function getIdFromName(name) {
+      return 'price-' + name.replace(/\s+\(.*\)/, '').replace(/[^a-z0-9]/gi,'-').replace(/-+/g,'-').toLowerCase();
+    }
+    function injectPrices() {
+      fetch(`${ENDPOINT}?token=${TOKEN}`)
+        .then(res => res.json())
+        .then(result => {
+          if(result.ok) {
+            result.rows.forEach(item => {
+              if(item.type==="Drinks" && item.cat && item.cat.toLowerCase().includes("softs") && item.available && item.name) {
+                let id = getIdFromName(item.name);
+                let elem = document.getElementById(id);
+                if(elem) elem.textContent = formatNaira(item.price);
+              }
+            });
+          }
+        });
+    }
+    document.addEventListener('DOMContentLoaded', injectPrices);
   </script>
 </body>
 </html>
-

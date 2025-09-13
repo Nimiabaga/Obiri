@@ -4,12 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cocktails — OBÍRÍ</title>
-
-  <!-- Global styles -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-
-  <!-- Page-only tweaks -->
   <style>
     .menu-toggle{
       display:flex; justify-content:center; gap:.6rem; flex-wrap:wrap;
@@ -25,7 +21,6 @@
       font-size:.85rem; line-height:1.3; color:#ddd; list-style:disc;
       max-height:180px; overflow:auto;
     }
-    /* no scroll on last two sections */
     .mini-list.noscroll{ max-height:unset; overflow:visible; }
     .mini-note{ text-align:center; color:var(--muted); margin:-.2rem 0 .6rem; font-weight:700; }
   </style>
@@ -34,11 +29,8 @@
   <header class="animate__animated animate__fadeInDown">
     <img src="images/obiri.png" alt="OBÍRÍ Restaurant & Lounge Logo" class="logo" />
   </header>
-
   <div class="menu-banner"><h2>COCKTAILS</h2></div>
   <div class="mini-note">Browse all: Regular • Non-Alcoholic • Shots • Special Signatures</div>
-
-  <!-- Quick jump -->
   <nav class="menu-toggle" aria-label="Cocktail sections">
     <a href="#regular"><span class="label-main">Regular</span></a>
     <a href="#nonalcoholic"><span class="label-main">Non-Alcoholic</span></a>
@@ -46,15 +38,13 @@
     <a href="#signatures"><span class="label-main">Signatures</span></a>
     <a href="./drinks.html"><span class="label-main">← Back to Drinks</span></a>
   </nav>
-
   <main>
     <div class="food-grid">
-      <!-- Regular Cocktails — single price -->
       <div class="food-card" id="regular">
         <img src="images/obiri-cocktails.jpg" alt="OBÍRÍ cocktails" />
         <div class="food-info">
           <h4>Cocktails</h4>
-          <p>₦8,900</p>
+          <p id="price-cocktails"></p>
           <ul class="mini-list">
             <li>Pineapple Colada</li>
             <li>Mojito</li>
@@ -81,13 +71,11 @@
           </ul>
         </div>
       </div>
-
-      <!-- Non-Alcoholic — single price -->
       <div class="food-card" id="nonalcoholic">
         <img src="images/obiri-non-alcoholic-cocktails.jpg" alt="Non-alcoholic cocktails" />
         <div class="food-info">
           <h4>Non-Alcoholic Cocktails</h4>
-          <p>₦7,900</p>
+          <p id="price-non-alcoholic-cocktails"></p>
           <ul class="mini-list">
             <li>Chapman</li>
             <li>Virgin Colada</li>
@@ -96,13 +84,11 @@
           </ul>
         </div>
       </div>
-
-      <!-- Cocktail Shots — single price; tequila called out -->
       <div class="food-card" id="shots">
         <img src="images/obiri-cocktail-shots.jpg" alt="Cocktail shots" />
         <div class="food-info">
           <h4>Cocktail Shots</h4>
-          <p>₦2,500</p>
+          <p id="price-cocktail-shots"></p>
           <ul class="mini-list noscroll">
             <li>Blue Kamikaze</li>
             <li>Amarula Springbokkie</li>
@@ -112,13 +98,11 @@
           </ul>
         </div>
       </div>
-
-      <!-- Special Cocktail Signatures — single price -->
       <div class="food-card" id="signatures">
         <img src="images/obiri-cocktail-signatures.jpg" alt="Special cocktail signatures" />
         <div class="food-info">
           <h4>Special Cocktail Signatures</h4>
-          <p>₦9,900</p>
+          <p id="price-special-cocktail-signatures"></p>
           <ul class="mini-list noscroll">
             <li>Summer In December</li>
             <li>Snow In Hell</li>
@@ -132,15 +116,43 @@
         </div>
       </div>
     </div>
-
     <div class="tray-note">Takeout ₦500</div>
   </main>
-
   <nav class="bottom-nav" aria-label="Primary">
     <a href="./index.html">Home</a>
     <a href="./food.html">Food</a>
     <a href="./drinks.html" class="active">Drinks</a>
     <a href="./contact.html">Contact</a>
   </nav>
+  <script>
+    const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzglCNUwMTg89aylX0vfv5_w9N1x2Ay1JKtNCq2AiP64vJ8ZuJjzaL9oHipM_-yJmxsww/exec';
+    const TOKEN = 'Forgive1988@';
+    function formatNaira(amount) {
+      if(!amount || isNaN(amount)) return '₦0';
+      return '₦' + Number(amount).toLocaleString();
+    }
+    function getIdFromName(name) {
+      return 'price-' + name.replace(/\s+\(.*\)/, '').replace(/[^a-z0-9]/gi,'-').replace(/-+/g,'-').toLowerCase();
+    }
+    function injectPrices() {
+      fetch(`${ENDPOINT}?token=${TOKEN}`)
+        .then(res => res.json())
+        .then(result => {
+          if(result.ok) {
+            result.rows.forEach(item => {
+              if(item.type === 'Drinks' && item.cat) {
+                let cat = item.cat.toLowerCase();
+                if(cat.includes('cocktails') || cat.includes('cocktail') || cat.includes('shots') || cat.includes('signatures')) {
+                  let id = getIdFromName(item.name);
+                  let elem = document.getElementById(id);
+                  if(elem) elem.textContent = formatNaira(item.price);
+                }
+              }
+            });
+          }
+        });
+    }
+    document.addEventListener('DOMContentLoaded', injectPrices);
+  </script>
 </body>
 </html>

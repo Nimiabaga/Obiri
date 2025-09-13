@@ -4,12 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Liquor — OBÍRÍ</title>
-
-  <!-- Global styles -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-
-  <!-- Page-only tweaks (same pattern as other drinks pages) -->
   <style>
     .menu-toggle{
       display:flex; justify-content:center; gap:.6rem; flex-wrap:wrap;
@@ -24,7 +20,6 @@
     .menu-toggle a:hover{ box-shadow:0 0 10px rgba(232,193,49,.22); }
     .menu-toggle a:active{ transform:scale(.98); box-shadow:inset 0 -2px 0 var(--gold-mid),0 0 10px rgba(232,193,49,.45); }
     .menu-toggle .label-main{ display:block; font-size:0.95rem; line-height:1; }
-
     .food-info p small{ font-weight:600; opacity:.9; }
     .menu-toggle a:active::after{ opacity:1 }
   </style>
@@ -34,88 +29,101 @@
   <header class="animate__animated animate__fadeInDown">
     <img src="images/obiri.png" alt="OBÍRÍ Restaurant & Lounge Logo" class="logo" />
   </header>
-
-  <!-- Banner -->
   <div class="menu-banner"><h2>DRINKS MENU</h2></div>
-
-  <!-- Quick jump back to Drinks -->
   <nav class="menu-toggle" aria-label="Back to Drinks">
     <a href="./drinks.html"><span class="label-main">← Back to Drinks</span></a>
   </nav>
-
-
   <main>
     <section class="section active" aria-labelledby="liquor-title">
       <h3 id="liquor-title" class="hero-title" style="text-align:center; margin:0 0 1rem;">
-        liquor
+        Liquor
       </h3>
-
       <div class="food-grid">
-        <!-- Palm Wine — ₦4,500 -->
         <div class="food-card">
           <img src="images/obiri-palm-wine.jpg" alt="Palm Wine" />
           <div class="food-info">
             <h4>Palm Wine</h4>
-            <p>₦4,500</p>
+            <p id="price-palm-wine"></p>
           </div>
         </div>
-
-        <!-- Origin Bitters (Small) — ₦5,000 -->
         <div class="food-card">
           <img src="images/obiri-origin-bitters-small.jpg" alt="Origin Bitters (Small)" />
           <div class="food-info">
             <h4>Origin Bitters<br><small>(Small)</small></h4>
-            <p>₦5,000</p>
+            <p id="price-origin-bitters-small"></p>
           </div>
         </div>
-
-        <!-- Origin Bitters (Big) — ₦10,000 -->
         <div class="food-card">
           <img src="images/obiri-origin-bitters-big.jpg" alt="Origin Bitters (Big)" />
           <div class="food-info">
             <h4>Origin Bitters<br><small>(Big)</small></h4>
-            <p>₦10,000</p>
+            <p id="price-origin-bitters-big"></p>
           </div>
         </div>
-
-        <!-- Odogwu Bitters (Small) — ₦3,500 -->
         <div class="food-card">
           <img src="images/obiri-odogwu-bitters.jpg" alt="Odogwu Bitters (Small)" />
           <div class="food-info">
             <h4>Odogwu Bitters<br><small>(Small)</small></h4>
-            <p>₦3,500</p>
+            <p id="price-odogwu-bitters-small"></p>
           </div>
         </div>
-
-        <!-- D-General — ₦3,500 -->
         <div class="food-card">
           <img src="images/obiri-d-general-bitters.jpg" alt="D-General Bitters" />
           <div class="food-info">
             <h4>D-General</h4>
-            <p>₦3,500</p>
+            <p id="price-d-general"></p>
           </div>
         </div>
-
-        <!-- Campari — ₦40,000 -->
         <div class="food-card">
           <img src="images/obiri-campari.jpg" alt="Campari" />
           <div class="food-info">
             <h4>Campari</h4>
-            <p>₦40,000</p>
+            <p id="price-campari"></p>
           </div>
         </div>
       </div>
     </section>
-
     <div class="tray-note">Takeout ₦500</div>
   </main>
-
-  <!-- Bottom Navigation -->
   <nav class="bottom-nav" aria-label="Primary">
     <a href="./index.html">Home</a>
     <a href="./food.html">Food</a>
     <a href="./drinks.html" class="active">Drinks</a>
     <a href="./contact.html">Contact</a>
   </nav>
+  <script>
+    const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzglCNUwMTg89aylX0vfv5_w9N1x2Ay1JKtNCq2AiP64vJ8ZuJjzaL9oHipM_-yJmxsww/exec';
+    const TOKEN = 'Forgive1988@';
+    function formatNaira(amount) {
+      if(!amount || isNaN(amount)) return '₦0';
+      return '₦' + Number(amount).toLocaleString();
+    }
+    // FINAL: universal, robust, no trailing dash, never removes (Small)/(Big)
+    function getIdFromName(name) {
+      return ('price-' + name
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]/gi,'-')
+        .replace(/-+/g,'-')
+        .toLowerCase()).replace(/-$/, '');
+    }
+    window.getIdFromName = getIdFromName;
+
+    function injectPrices() {
+      fetch(`${ENDPOINT}?token=${TOKEN}`)
+        .then(res => res.json())
+        .then(result => {
+          if(result.ok) {
+            result.rows.forEach(item => {
+              if(item.type === 'Drinks' && item.cat && (item.cat.toLowerCase().includes('liquor') || item.cat.toLowerCase().includes('bitter')) && item.available && item.name) {
+                let id = getIdFromName(item.name);
+                let elem = document.getElementById(id);
+                if(elem) elem.textContent = formatNaira(item.price);
+              }
+            });
+          }
+        });
+    }
+    document.addEventListener('DOMContentLoaded', injectPrices);
+  </script>
 </body>
 </html>

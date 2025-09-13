@@ -113,7 +113,7 @@
   let q = '';
   let filterType = '';
 
-  // DRINKS CATALOG (use this!)
+  // DRINKS CATALOG (original, unchanged)
   const drinksCatalog = {
     'Beers / Stouts': [
       {name:'Big Beers / Stouts', price:2500},
@@ -201,10 +201,126 @@
       {name:'Moët Rich', price:190000},
       {name:'Veuve Clicquot Brut', price:170000},
       {name:'Belaire', price:100000}
+    ],
+    'Milkshakes': [
+      {name:'Milkshakes', price:8900}
+    ],
+    'Smoothies': [
+      {name:'Smoothies', price:8900}
+    ],
+    'Cocktails – Regular': [
+      {name:'Cocktails', price:8900}
+    ],
+    'Cocktails – Non-Alcoholic': [
+      {name:'Non-Alcoholic Cocktails', price:7900}
+    ],
+    'Cocktails – Shots': [
+      {name:'Cocktail Shots', price:2500},
+      {name:'Tequila Shots', price:2000}
+    ],
+    'Cocktails – Signatures': [
+      {name:'Special Cocktail Signatures', price:9900}
+    ],
+    'Liquor / Bitters': [
+      {name:'Palm Wine', price:4500},
+      {name:'Origin Bitters (Small)', price:5000},
+      {name:'Origin Bitters (Big)', price:10000},
+      {name:'Odogwu Bitters (Small)', price:3500},
+      {name:'D-General', price:3500},
+      {name:'Campari', price:40000}
     ]
   };
 
-  const foodCatalog = {}; // Still empty for now
+  // FOOD CATALOG (now filled)
+  const foodCatalog = {
+    'Soups': [
+      {name:'Afang', price:6000},
+      {name:'Egusi', price:6000},
+      {name:'Ogbono', price:6000},
+      {name:'Ofe Onugbu (Bitterleaf)', price:6000},
+      {name:'Oha', price:6000},
+      {name:'Okra', price:6000},
+      {name:'Banga', price:7000},
+      {name:'Ofensala', price:8000},
+      {name:'Native Soup', price:10000}
+    ],
+    'Signature Pots': [
+      {name:'Ikwerre Okazi', price:25000},
+      {name:'Fisherman Soup (Red Snapper Head)', price:30000},
+      {name:'Seafood Okra (Red Snapper — Head)', price:30000},
+      {name:'Seafood Okra (Red Snapper — Middle/Tail)', price:25000}
+    ],
+    'Proteins': [
+      {name:'Goat Meat', price:7000},
+      {name:'Dried Goat Meat', price:7000},
+      {name:'Cow Leg, Head & Tail', price:6500},
+      {name:'Bushmeat', price:7500},
+      {name:'Dried Catfish', price:6000},
+      {name:'Chicken', price:7000},
+      {name:'Beef', price:6500},
+      {name:'Dried Beef', price:6500},
+      {name:'Croaker', price:7000},
+      {name:'Fresh Catfish', price:6000},
+      {name:'Cow Assorted', price:6500},
+      {name:'Goat Assorted', price:6500},
+      {name:'Snail', price:10000}
+    ],
+    'Pepper Soup': [
+      {name:'Goat Meat', price:8000},
+      {name:'Cow Leg, Head & Tail', price:10000},
+      {name:'Bushmeat', price:11000},
+      {name:'Fresh Catfish', price:8000},
+      {name:'Cow Assorted', price:10000},
+      {name:'Goat Assorted', price:10000},
+      {name:'Chicken', price:8000},
+      {name:'Fresh Red Snapper', price:12000},
+      {name:'Beef', price:8000}
+    ],
+    'Pepper Dem (Anu-Gworogwu)': [
+      {name:'Bayelsa Suya', price:7000},
+      {name:'Peppered Snail', price:12000},
+      {name:'Bushmeat', price:10000},
+      {name:'Peppered Goat Meat', price:8000},
+      {name:'Peppered Cow Meat', price:8000},
+      {name:'Peppered Beef', price:8500},
+      {name:'Peppered Chicken', price:8000},
+      {name:'Matching Ground', price:10000},
+      {name:'Nkwobi', price:9500},
+      {name:'Isiewu', price:12000},
+      {name:'Ugba', price:5000},
+      {name:'Kpomo', price:2500},
+      {name:'Stockfish', price:4500},
+      {name:'Fried Fish', price:3000},
+      {name:'Abacha', price:6000}
+    ],
+    'Rice': [
+      {name:'Native Rice', price:7000},
+      {name:'Jollof Rice', price:6000},
+      {name:'Coconut Rice', price:6500},
+      {name:'White Rice', price:2500}
+    ],
+    'Sides': [
+      {name:'Fried Plantain (as side)', price:500},
+      {name:'Fried Yam', price:3000},
+      {name:'Fried Plantain', price:3000},
+      {name:'Agidi', price:1000},
+      {name:'Plantain Porridge', price:5000},
+      {name:'Porridge Yam', price:5000}
+    ],
+    'Swallow': [
+      {name:'Eba', price:1500},
+      {name:'Semo', price:1500},
+      {name:'Poundo', price:1500},
+      {name:'Oatmeal', price:2500},
+      {name:'Wheat', price:2000},
+      {name:'Plantain Flour', price:2500}
+    ],
+    'Barbeque': [
+      {name:'Grilled Catfish', price:20000},
+      {name:'Croaker (marinated) — Big', price:20000},
+      {name:'Croaker (marinated) — Small', price:15000}
+    ]
+  };
 
   const rowsEl = document.getElementById('rows');
   const toast = (m='Saved ✓') => { const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1200); };

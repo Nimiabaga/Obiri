@@ -4,12 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Wine — OBÍRÍ</title>
-
-  <!-- Global styles -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-
-  <!-- Page-only tweaks (same pattern as other drinks pages) -->
   <style>
     .menu-toggle{
       display:flex; justify-content:center; gap:.6rem; flex-wrap:wrap;
@@ -24,94 +20,132 @@
     .menu-toggle a:hover{ box-shadow:0 0 10px rgba(232,193,49,.22); }
     .menu-toggle a:active{ transform:scale(.98); box-shadow:inset 0 -2px 0 var(--gold-mid),0 0 10px rgba(232,193,49,.45); }
     .menu-toggle .label-main{ display:block; font-size:0.95rem; line-height:1; }
+    .soldout-label {
+      color: #fff;
+      background: #d91e1e;
+      border-radius: 0.35em;
+      padding: 0.07em 0.5em;
+      font-weight: bold;
+      margin-left: 0.6em;
+      font-size: 0.97em;
+      vertical-align: middle;
+      display: inline-block;
+    }
+    .food-card.soldout { opacity: 0.48; }
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header class="animate__animated animate__fadeInDown">
     <img src="images/obiri.png" alt="OBÍRÍ Restaurant & Lounge Logo" class="logo" />
   </header>
-
-  <!-- Banner -->
   <div class="menu-banner"><h2>DRINKS MENU</h2></div>
-
- <!-- Quick jump back to Drinks -->
   <nav class="menu-toggle" aria-label="Back to Drinks">
     <a href="./drinks.html"><span class="label-main">← Back to Drinks</span></a>
   </nav>
-
   <main>
     <section class="section active" aria-labelledby="wine-title">
-      <h3 id="wine-title" class="hero-title" style="text-align:center; margin:0 0 1rem;">
-        Wine
-      </h3>
-
+      <h3 id="wine-title" class="hero-title" style="text-align:center; margin:0 0 1rem;">Wine</h3>
       <div class="food-grid">
-        <!-- Four Cousins — ₦18,000 -->
-        <div class="food-card">
+        <div class="food-card" id="card-four-cousins">
           <img src="images/obiri-four-cousins.jpg" alt="Four Cousins wine" />
           <div class="food-info">
             <h4>Four Cousins</h4>
-            <p>₦18,000</p>
+            <p id="price-four-cousins"></p>
           </div>
         </div>
-
-        <!-- Drostdy Hoff (Big) — ₦18,000 -->
-        <div class="food-card">
+        <div class="food-card" id="card-drostdy-hoff-big">
           <img src="images/obiri-drostdy-hoff-big.jpg" alt="Drostdy Hoff (Big)" />
           <div class="food-info">
             <h4>Drostdy Hoff (Big)</h4>
-            <p>₦18,000</p>
+            <p id="price-drostdy-hoff-big"></p>
           </div>
         </div>
-
-        <!-- Drostdy (Small) — ₦10,000 -->
-        <div class="food-card">
+        <div class="food-card" id="card-drostdy-small">
           <img src="images/obiri-drostdy-small.jpg" alt="Drostdy (Small)" />
           <div class="food-info">
             <h4>Drostdy (Small)</h4>
-            <p>₦10,000</p>
+            <p id="price-drostdy-small"></p>
           </div>
         </div>
-
-        <!-- Expression — ₦18,000 -->
-        <div class="food-card">
+        <div class="food-card" id="card-expression">
           <img src="images/obiri-expression.jpg" alt="Expression wine" />
           <div class="food-info">
             <h4>Expression</h4>
-            <p>₦18,000</p>
+            <p id="price-expression"></p>
           </div>
         </div>
-
-        <!-- Sweet Lips — ₦20,000 -->
-        <div class="food-card">
+        <div class="food-card" id="card-sweet-lips">
           <img src="images/obiri-sweet-lips.jpg" alt="Sweet Lips wine" />
           <div class="food-info">
             <h4>Sweet Lips</h4>
-            <p>₦20,000</p>
+            <p id="price-sweet-lips"></p>
           </div>
         </div>
-
-        <!-- Carlo Rossi — ₦20,000 -->
-        <div class="food-card">
+        <div class="food-card" id="card-carlo-rossi">
           <img src="images/obiri-carlo-rossi.jpg" alt="Carlo Rossi wine" />
           <div class="food-info">
             <h4>Carlo Rossi</h4>
-            <p>₦20,000</p>
+            <p id="price-carlo-rossi"></p>
           </div>
         </div>
       </div>
     </section>
-
     <div class="tray-note">Takeout ₦500</div>
   </main>
-
-  <!-- Bottom Navigation -->
   <nav class="bottom-nav" aria-label="Primary">
     <a href="./index.html">Home</a>
     <a href="./food.html">Food</a>
     <a href="./drinks.html" class="active">Drinks</a>
     <a href="./contact.html">Contact</a>
   </nav>
+  <script>
+    const ENDPOINT = 'https://script.google.com/macros/s/AKfycbxvsocRF4Pgv1cXB6RoEH7diqohK05MErMnFgN5vYZD1vk6gtcSWpCl8EwHCUG9_x2yiw/exec';
+    const TOKEN = 'Forgive1988@';
+    function formatNaira(amount) {
+      if(!amount || isNaN(amount)) return '₦0';
+      return '₦' + Number(amount).toLocaleString();
+    }
+    function getIdFromName(name) {
+      return ('price-' + name
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]/gi,'-')
+        .replace(/-+/g,'-')
+        .toLowerCase()).replace(/-$/, '');
+    }
+    function getCardIdFromName(name) {
+      return ('card-' + name
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]/gi,'-')
+        .replace(/-+/g,'-')
+        .toLowerCase()).replace(/-$/, '');
+    }
+    function injectPrices() {
+      fetch(`${ENDPOINT}?token=${TOKEN}`)
+        .then(res => res.json())
+        .then(result => {
+          if(result.ok) {
+            result.rows.forEach(item => {
+              if(item.type==="Drinks" && item.cat && item.cat.toLowerCase().includes("wine") && item.name) {
+                let priceId = getIdFromName(item.name);
+                let cardId = getCardIdFromName(item.name);
+                let priceElem = document.getElementById(priceId);
+                let cardElem = document.getElementById(cardId);
+                if(priceElem && cardElem) {
+                  priceElem.innerHTML = '';
+                  cardElem.classList.remove('soldout');
+                  if(item.available === true) {
+                    priceElem.textContent = formatNaira(item.price);
+                  } else {
+                    priceElem.innerHTML = `${formatNaira(item.price)} <span class="soldout-label">Sold Out</span>`;
+                    cardElem.classList.add('soldout');
+                  }
+                }
+              }
+            });
+          }
+        });
+    }
+    document.addEventListener('DOMContentLoaded', injectPrices);
+  </script>
 </body>
 </html>

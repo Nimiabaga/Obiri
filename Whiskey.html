@@ -4,12 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Whiskey — OBÍRÍ</title>
-
-  <!-- Global styles -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-
-  <!-- Page-only tweaks (same pattern as other drinks pages) -->
   <style>
     .menu-toggle{
       display:flex; justify-content:center; gap:.6rem; flex-wrap:wrap;
@@ -24,7 +20,6 @@
     .menu-toggle a:hover{ box-shadow:0 0 10px rgba(232,193,49,.22); }
     .menu-toggle a:active{ transform:scale(.98); box-shadow:inset 0 -2px 0 var(--gold-mid),0 0 10px rgba(232,193,49,.45); }
     .menu-toggle .label-main{ display:block; font-size:0.95rem; line-height:1; }
-
     .food-info p small{ font-weight:600; opacity:.9; }
     .menu-toggle a:active::after{ opacity:1 }
   </style>
@@ -34,178 +29,164 @@
   <header class="animate__animated animate__fadeInDown">
     <img src="images/obiri.png" alt="OBÍRÍ Restaurant & Lounge Logo" class="logo" />
   </header>
-
-  <!-- Banner -->
   <div class="menu-banner"><h2>DRINKS MENU</h2></div>
-
-  <!-- Quick jump back to Drinks -->
   <nav class="menu-toggle" aria-label="Back to Drinks">
     <a href="./drinks.html"><span class="label-main">← Back to Drinks</span></a>
   </nav>
-
-
   <main>
     <section class="section active" aria-labelledby="whiskey-title">
       <h3 id="whiskey-title" class="hero-title" style="text-align:center; margin:0 0 1rem;">
         Whiskey
       </h3>
-
       <div class="food-grid">
-        <!-- Jameson Black — ₦70,000 -->
         <div class="food-card">
           <img src="images/obiri-jameson-black.jpg" alt="Jameson Black" />
           <div class="food-info">
             <h4>Jameson Black</h4>
-            <p>₦70,000</p>
+            <p id="price-jameson-black"></p>
           </div>
         </div>
-
-        <!-- Jameson Green — ₦55,000 -->
         <div class="food-card">
           <img src="images/obiri-jameson-green.jpg" alt="Jameson Green" />
           <div class="food-info">
             <h4>Jameson Green</h4>
-            <p>₦55,000</p>
+            <p id="price-jameson-green"></p>
           </div>
         </div>
-
-        <!-- Glenfiddich 21 — ₦600,000 -->
         <div class="food-card">
           <img src="images/obiri-glenfiddich-21.jpg" alt="Glenfiddich 21 Years" />
           <div class="food-info">
             <h4>Glenfiddich 21 Years</h4>
-            <p>₦600,000</p>
+            <p id="price-glenfiddich-21-years"></p>
           </div>
         </div>
-
-        <!-- Glenfiddich 18 — ₦250,000 -->
         <div class="food-card">
           <img src="images/obiri-glenfiddich-18.jpg" alt="Glenfiddich 18 Years" />
           <div class="food-info">
             <h4>Glenfiddich 18 Years</h4>
-            <p>₦250,000</p>
+            <p id="price-glenfiddich-18-years"></p>
           </div>
         </div>
-
-        <!-- Glenfiddich 15 — ₦140,000 -->
         <div class="food-card">
           <img src="images/obiri-glenfiddich-15.jpg" alt="Glenfiddich 15 Years" />
           <div class="food-info">
             <h4>Glenfiddich 15 Years</h4>
-            <p>₦140,000</p>
+            <p id="price-glenfiddich-15-years"></p>
           </div>
         </div>
-
-        <!-- Glenfiddich 12 — ₦100,000 -->
         <div class="food-card">
           <img src="images/obiri-glenfiddich-12.jpg" alt="Glenfiddich 12 Years" />
           <div class="food-info">
             <h4>Glenfiddich 12 Years</h4>
-            <p>₦100,000</p>
+            <p id="price-glenfiddich-12-years"></p>
           </div>
         </div>
-
-        <!-- Glamorich 18 — ₦300,000 -->
         <div class="food-card">
           <img src="images/obiri-glamorich-18.jpg" alt="Glamorich 18 Years" />
           <div class="food-info">
             <h4>Glenmorangie 18 Years</h4>
-            <p>₦300,000</p>
+            <p id="price-glenmorangie-18-years"></p>
           </div>
         </div>
-
-        <!-- Glamorich 10 — ₦80,000 -->
         <div class="food-card">
           <img src="images/obiri-glamorich-10.jpg" alt="Glamorich 10 Years" />
           <div class="food-info">
             <h4>Glenmorangie 10 Years</h4>
-            <p>₦80,000</p>
+            <p id="price-glenmorangie-10-years"></p>
           </div>
         </div>
-
-        <!-- Black Label — ₦70,000 -->
         <div class="food-card">
           <img src="images/obiri-black-label.jpg" alt="Black Label" />
           <div class="food-info">
             <h4>Black Label</h4>
-            <p>₦70,000</p>
+            <p id="price-black-label"></p>
           </div>
         </div>
-
-        <!-- Gold Label — ₦110,000 -->
         <div class="food-card">
           <img src="images/obiri-gold-label.jpg" alt="Gold Label" />
           <div class="food-info">
             <h4>Gold Label</h4>
-            <p>₦110,000</p>
+            <p id="price-gold-label"></p>
           </div>
         </div>
-
-        <!-- Monkey Shoulder — ₦70,000 -->
         <div class="food-card">
           <img src="images/obiri-monkey-shoulder.jpg" alt="Monkey Shoulder" />
           <div class="food-info">
             <h4>Monkey Shoulder</h4>
-            <p>₦70,000</p>
+            <p id="price-monkey-shoulder"></p>
           </div>
         </div>
-
-        <!-- Macallan 12 — ₦150,000 -->
         <div class="food-card">
           <img src="images/obiri-macallan-12.jpg" alt="Macallan 12 Years" />
           <div class="food-info">
             <h4>Macallan 12 Years</h4>
-            <p>₦150,000</p>
+            <p id="price-macallan-12-years"></p>
           </div>
         </div>
-
-        <!-- Singleton 12 — ₦100,000 -->
         <div class="food-card">
           <img src="images/obiri-singleton-12.jpg" alt="Singleton 12 Years" />
           <div class="food-info">
             <h4>Singleton 12 Years</h4>
-            <p>₦100,000</p>
+            <p id="price-singleton-12-years"></p>
           </div>
         </div>
-
-        <!-- Observatory 20 — ₦70,000 -->
         <div class="food-card">
           <img src="images/obiri-observatory-20.jpg" alt="Observatory 20 Years" />
           <div class="food-info">
             <h4>Observatory 20 Years</h4>
-            <p>₦70,000</p>
+            <p id="price-observatory-20-years"></p>
           </div>
         </div>
-
-        <!-- Jack Daniels — ₦65,000 -->
         <div class="food-card">
           <img src="images/obiri-jack-daniels.jpg" alt="Jack Daniels" />
           <div class="food-info">
             <h4>Jack Daniels</h4>
-            <p>₦65,000</p>
+            <p id="price-jack-daniels"></p>
           </div>
         </div>
-
-        <!-- American Honey — ₦45,000 -->
         <div class="food-card">
           <img src="images/obiri-american-honey.jpg" alt="American Honey" />
           <div class="food-info">
             <h4>American Honey</h4>
-            <p>₦45,000</p>
+            <p id="price-american-honey"></p>
           </div>
         </div>
       </div>
     </section>
-
     <div class="tray-note">Takeout ₦500</div>
   </main>
-
-  <!-- Bottom Navigation -->
   <nav class="bottom-nav" aria-label="Primary">
     <a href="./index.html">Home</a>
     <a href="./food.html">Food</a>
     <a href="./drinks.html" class="active">Drinks</a>
     <a href="./contact.html">Contact</a>
   </nav>
+  <script>
+    const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzglCNUwMTg89aylX0vfv5_w9N1x2Ay1JKtNCq2AiP64vJ8ZuJjzaL9oHipM_-yJmxsww/exec';
+    const TOKEN = 'Forgive1988@';
+    function formatNaira(amount) {
+      if(!amount || isNaN(amount)) return '₦0';
+      return '₦' + Number(amount).toLocaleString();
+    }
+    function getIdFromName(name) {
+      return 'price-' + name.replace(/\s+\(.*\)/, '').replace(/[^a-z0-9]/gi,'-').replace(/-+/g,'-').toLowerCase();
+    }
+    function injectPrices() {
+      fetch(`${ENDPOINT}?token=${TOKEN}`)
+        .then(res => res.json())
+        .then(result => {
+          if(result.ok) {
+            result.rows.forEach(item => {
+              if(item.type==="Drinks" && item.cat && item.cat.toLowerCase().includes("whiskey") && item.available && item.name) {
+                let id = getIdFromName(item.name);
+                let elem = document.getElementById(id);
+                if(elem) elem.textContent = formatNaira(item.price);
+              }
+            });
+          }
+        });
+    }
+    document.addEventListener('DOMContentLoaded', injectPrices);
+  </script>
 </body>
 </html>
