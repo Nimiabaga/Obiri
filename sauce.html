@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Food — OBÍRÍ</title>
+  <title>Sauces — OBÍRÍ</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <style>
@@ -25,12 +25,8 @@
       border:1px solid var(--gold-deep);
       color:var(--gold-solid);
       transition:box-shadow .2s ease, transform .08s ease;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:3px;
-      min-width:140px;
-      text-align:center;
+      display:flex; flex-direction:column; align-items:center; gap:3px;
+      min-width:140px; text-align:center;
     }
     .menu-toggle a:hover{ box-shadow:0 0 10px rgba(232,193,49,.22); }
     .menu-toggle a:active{ transform:scale(.98); box-shadow:inset 0 -2px 0 var(--gold-mid),0 0 10px rgba(232,193,49,.45); }
@@ -56,7 +52,6 @@
   <header class="animate__animated animate__fadeInDown">
     <img src="images/obiri.png" alt="OBÍRÍ Restaurant & Lounge Logo" class="logo" />
   </header>
-
   <div class="menu-banner"><h2>FOOD MENU</h2></div>
   <nav class="menu-toggle" role="navigation" aria-label="Food categories">
     <a href="./Soup-Mini-Wiri.html">
@@ -73,10 +68,6 @@
       <span class="label-main">Rice</span>
       <span class="label-sub">(Arusi)</span>
     </a>
-    <a href="./sauce.html">
-      <span class="label-main">Sauce</span>
-      
-    </a>
     <a href="./pepper-soup.html">
       <span class="label-main">Pepper Soup</span>
       <span class="label-sub">(Mini-wiri Gorogoro)</span>
@@ -88,40 +79,37 @@
     </a>
   </nav>
   <main>
-    <div class="food-grid">
-      <!-- Isiewu -->
-      <div class="food-card" id="card-isiewu">
-        <img src="images/obiri-isiewu.jpg" alt="Isiewu" />
-        <div class="food-info">
-          <h4>Isiewu</h4>
-          <p id="price-isiewu"></p>
+    <section aria-labelledby="sauces-title">
+      <h3 id="sauces-title" class="hero-title" style="text-align:center; margin:0 0 1rem;">
+        Sauces
+      </h3>
+      <div class="food-grid">
+        <div class="food-card" id="card-tomatoe-sauce-stew">
+          <img src="images/obiri-tomatoe-sauce-stew.jpg" alt="Tomatoe Sauce (Stew)" />
+          <div class="food-info">
+            <h4>Tomatoe Sauce (Stew)</h4>
+            <p id="price-tomatoe-sauce-stew"></p>
+          </div>
+        </div>
+
+        <!-- Full Chicken Vegetable Sauce — Dynamic price/block pattern -->
+        <div class="food-card" id="card-full-chicken-vegetable-sauce">
+          <img src="images/obiri-full-chicken-vegetable-sauce.jpg" alt="Full Chicken Vegetable Sauce" />
+          <div class="food-info">
+            <h4>Full Chicken Vegetable Sauce</h4>
+            <p id="price-full-chicken-vegetable-sauce"></p>
+          </div>
+        </div>
+        
+        <div class="food-card" id="card-vegetable-sauce">
+          <img src="images/obiri-vegetable-sauce.jpg" alt="Vegetable Sauce" />
+          <div class="food-info">
+            <h4>Vegetable Sauce</h4>
+            <p id="price-vegetable-sauce"></p>
+          </div>
         </div>
       </div>
-      <!-- Bayelsa Suya -->
-      <div class="food-card" id="card-bayelsa-suya">
-        <img src="images/obiri-bayelsa-suya.jpg" alt="Bayelsa Suya" />
-        <div class="food-info">
-          <h4>Bayelsa Suya</h4>
-          <p id="price-bayelsa-suya"></p>
-        </div>
-      </div>
-      <!-- Bush Meat -->
-      <div class="food-card" id="card-bushmeat">
-        <img src="images/obiri-bush-meat.jpg" alt="BushMeat" />
-        <div class="food-info">
-          <h4>BushMeat</h4>
-          <p id="price-bushmeat"></p>
-        </div>
-      </div>
-      <!-- Abacha -->
-      <div class="food-card" id="card-abacha">
-        <img src="images/obiri-abacha.jpg" alt="Abacha" />
-        <div class="food-info">
-          <h4>Abacha</h4>
-          <p id="price-abacha"></p>
-        </div>
-      </div>
-    </div>
+    </section>
     <div class="tray-note">Takeout ₦500</div>
   </main>
   <nav class="bottom-nav" aria-label="Primary">
@@ -157,7 +145,12 @@
         .then(result => {
           if(result.ok) {
             result.rows.forEach(item => {
-              if(item.type === 'Food' && item.name) {
+              if(
+                item.type === 'Food' &&
+                item.cat &&
+                item.cat.toLowerCase().includes('sauce') &&
+                item.name
+              ) {
                 let priceId = getIdFromName(item.name);
                 let cardId = getCardIdFromName(item.name);
                 let priceElem = document.getElementById(priceId);
