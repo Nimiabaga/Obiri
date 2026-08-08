@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cigarettes — OBÍRÍ</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <style>
+    .menu-toggle{
+      display:flex; justify-content:center; gap:.6rem; flex-wrap:wrap;
+      margin:1rem auto 1.2rem; max-width:1100px; padding:0 .6rem;
+    }
+    .menu-toggle a{
+      padding:.55rem 1rem; border-radius:8px; font-weight:800; text-decoration:none;
+      background:#0f0f0f; border:1px solid var(--gold-deep); color:var(--gold-solid);
+      transition:box-shadow .2s ease, transform .08s ease;
+      display:flex; flex-direction:column; align-items:center; gap:3px; min-width:140px; text-align:center;
+    }
+    .menu-toggle a:hover{ box-shadow:0 0 10px rgba(232,193,49,.22); }
+    .menu-toggle a:active{ transform:scale(.98); box-shadow:inset 0 -2px 0 var(--gold-mid),0 0 10px rgba(232,193,49,.45); }
+    .menu-toggle .label-main{ display:block; font-size:0.95rem; line-height:1; }
+
+    .ciga-header-img{
+      display:block; width:100%; max-width:640px; height:220px; object-fit:cover;
+      margin:0 auto 1.6rem; border-radius:14px;
+      box-shadow: var(--shadow-2), 0 0 0 1px var(--border);
+    }
+
+    .price-list{
+      max-width:640px; margin:0 auto; padding:0 1rem;
+    }
+    .price-row{
+      display:flex; justify-content:space-between; align-items:center;
+      padding:1rem 1.2rem; margin-bottom:.8rem;
+      background:#1a1a1a; border:1px solid var(--border); border-radius:12px;
+      animation: obiriPop .55s cubic-bezier(.2,.8,.2,1) both;
+    }
+    .price-row:nth-child(1){ animation-delay:.10s }
+    .price-row:nth-child(2){ animation-delay:.18s }
+    .price-row:nth-child(3){ animation-delay:.26s }
+    .price-row h4{
+      margin:0; color:#fff; font-size:1.05rem; font-weight:700;
+    }
+    .price-row .price{
+      font-weight:800; font-size:1.2rem;
+      background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold-mid) 55%, var(--gold-deep) 100%);
+      -webkit-background-clip: text; background-clip: text; color:transparent;
+      white-space:nowrap; margin-left:1rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="animate__animated animate__fadeInDown">
+    <img src="images/obiri.png" alt="OBÍRÍ Restaurant & Lounge Logo" class="logo" />
+  </header>
+  <div class="menu-banner"><h2>CIGARETTES</h2></div>
+  <nav class="menu-toggle" aria-label="Back to Drinks">
+    <a href="./drinks.html"><span class="label-main">← Back to Drinks</span></a>
+  </nav>
+  <main>
+    <section class="section active" aria-labelledby="ciga-title">
+      <img src="images/obiri-cigarettes.jpg" alt="Cigarettes" class="ciga-header-img" />
+      <div class="price-list">
+        <div class="price-row">
+          <h4>Dunhill Switch</h4>
+          <span class="price">₦3,000</span>
+        </div>
+        <div class="price-row">
+          <h4>Esse Change</h4>
+          <span class="price">₦2,000</span>
+        </div>
+        <div class="price-row">
+          <h4>Esse Black</h4>
+          <span class="price">₦2,000</span>
+        </div>
+      </div>
+    </section>
+  </main>
+  <nav class="bottom-nav" aria-label="Primary">
+    <a href="./index.html">Home</a>
+    <a href="./food.html">Food</a>
+    <a href="./drinks.html" class="active">Drinks</a>
+    <a href="./contact.html">Contact</a>
+  </nav>
+</body>
+</html>
