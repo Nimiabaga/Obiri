@@ -46,6 +46,29 @@
       display: inline-block;
     }
     .food-card.soldout { opacity: 0.48; }
+
+    .subsection-title{
+      text-align:center; margin:1.6rem 0 1rem; font-weight:900;
+      letter-spacing:.04em; color:var(--gold-solid); font-size:1.15rem;
+      text-transform:uppercase;
+    }
+    .price-list{
+      max-width:640px; margin:0 auto; padding:0 1rem;
+    }
+    .price-row{
+      display:flex; justify-content:space-between; align-items:center;
+      padding:1rem 1.2rem; margin-bottom:.8rem;
+      background:#1a1a1a; border:1px solid var(--border); border-radius:12px;
+    }
+    .price-row h4{
+      margin:0; color:#fff; font-size:1rem; font-weight:700;
+    }
+    .price-row .price{
+      font-weight:800; font-size:1.15rem;
+      background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold-mid) 55%, var(--gold-deep) 100%);
+      -webkit-background-clip: text; background-clip: text; color:transparent;
+      white-space:nowrap; margin-left:1rem;
+    }
   </style>
 </head>
 <body>
@@ -162,6 +185,24 @@
             <p id="price-seafood-okra-red-snapper-middle-tail"></p>
           </div>
         </div>
+      </div>
+
+      <!-- Fisherman Soup — All Types -->
+      <h4 class="subsection-title">Fisherman Soup — All Types</h4>
+      <div class="price-list">
+        <div class="price-row"><h4>Fisherman Soup with Catfish Middle/Tail</h4><span class="price">₦35,000</span></div>
+        <div class="price-row"><h4>Fisherman Soup with Cow Leg</h4><span class="price">₦35,000</span></div>
+        <div class="price-row"><h4>Fisherman Soup with Cow Head</h4><span class="price">₦35,000</span></div>
+        <div class="price-row"><h4>Fisherman Soup with Cow Tail</h4><span class="price">₦35,000</span></div>
+        <div class="price-row"><h4>Fisherman Soup with Chicken</h4><span class="price">₦35,000</span></div>
+        <div class="price-row"><h4>Fisherman Soup with Goatmeat</h4><span class="price">₦35,000</span></div>
+        <div class="price-row"><h4>Fisherman Soup with Dry RedSnapper Middle/Tail</h4><span class="price">₦40,000</span></div>
+        <div class="price-row"><h4>Fisherman Soup with Catfish Head</h4><span class="price">₦40,000</span></div>
+        <div class="price-row"><h4>Fisherman Soup with Croaker Fish Middle/Tail</h4><span class="price">₦40,000</span></div>
+        <div class="price-row"><h4>Fisherman Soup with Dry RedSnapper Head</h4><span class="price">₦50,000</span></div>
+        <div class="price-row"><h4>Fisherman Soup with Fresh RedSnapper Middle/Tail</h4><span class="price">₦50,000</span></div>
+        <div class="price-row"><h4>Fisherman Soup with Fresh RedSnapper Head</h4><span class="price">₦50,000</span></div>
+        <div class="price-row"><h4>Fisherman Soup with Red Snapper (Big Head)</h4><span class="price">₦60,000</span></div>
       </div>
     </section>
     <div class="tray-note">Takeout ₦500</div>
