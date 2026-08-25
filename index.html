@@ -6,6 +6,20 @@
   <title>Home - OBÍRÍ</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <style>
+    .soldout-label {
+      color: #fff;
+      background: #d91e1e;
+      border-radius: 0.35em;
+      padding: 0.07em 0.5em;
+      font-weight: bold;
+      margin-left: 0.6em;
+      font-size: 0.97em;
+      vertical-align: middle;
+      display: inline-block;
+    }
+    .food-card.soldout { opacity: 0.48; }
+  </style>
 </head>
 <body>
   <!-- Header (logo only; "RESTAURANT • LOUNGE" tag is via CSS) -->
@@ -25,38 +39,38 @@
 
       <div class="food-grid">
         <!-- Fisherman Soup — Head (keep one soup) -->
-        <div class="food-card" tabindex="0">
+        <div class="food-card" id="card-fisherman-soup-red-snapper-head" tabindex="0">
           <img src="images/obiri-fisherman-soup-head.jpg" alt="Fisherman Soup with Red Snapper Head" />
           <div class="food-info">
             <h4>Fisherman Soup<br><small>(Red Snapper Head, Ngolo, Periwinkle, shrimps, crab, tiger prawns)</small></h4>
-            <p>₦45,000</p>
+            <p id="price-fisherman-soup-red-snapper-head"></p>
           </div>
         </div>
 
-        <!-- Full Chicken Peppersoup — ₦25,000 -->
-        <div class="food-card" tabindex="0">
-          <img src="images/obiri-full-chicken-peppersoup.jpg" alt="Full Chicken Peppersoup" />
+        <!-- Full Chicken Pepper Soup -->
+        <div class="food-card" id="card-full-chicken-pepper-soup" tabindex="0">
+          <img src="images/obiri-full-chicken-peppersoup.jpg" alt="Full Chicken Pepper Soup" />
           <div class="food-info">
-            <h4>Full Chicken Peppersoup</h4>
-            <p>₦35,000</p>
+            <h4>Full Chicken Pepper Soup</h4>
+            <p id="price-full-chicken-pepper-soup"></p>
           </div>
         </div>
 
-        <!-- Full Chicken Vegetable Sauce — ₦25,000 -->
-        <div class="food-card" tabindex="0">
+        <!-- Full Chicken Vegetable Sauce -->
+        <div class="food-card" id="card-full-chicken-vegetable-sauce" tabindex="0">
           <img src="images/obiri-full-chicken-vegetable-sauce.jpg" alt="Full Chicken Vegetable Sauce" />
           <div class="food-info">
             <h4>Full Chicken Vegetable Sauce</h4>
-            <p>₦35,000</p>
+            <p id="price-full-chicken-vegetable-sauce"></p>
           </div>
         </div>
 
-        <!-- Palm Wine — ₦4,500 -->
-        <div class="food-card" tabindex="0">
+        <!-- Palm Wine -->
+        <div class="food-card" id="card-palm-wine" tabindex="0">
           <img src="images/obiri-palm-wine.jpg" alt="Palm Wine" />
           <div class="food-info">
             <h4>Palm Wine</h4>
-            <p>₦4,500</p>
+            <p id="price-palm-wine"></p>
           </div>
         </div>
       </div>
@@ -90,6 +104,57 @@
         card.addEventListener('blur',  () => card.classList.remove('focus'));
       });
     });
+  </script>
+
+  <!-- Live price sync from the admin backend (Google Sheet) -->
+  <script>
+    const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzglCNUwMTg89aylX0vfv5_w9N1x2Ay1JKtNCq2AiP64vJ8ZuJjzaL9oHipM_-yJmxsww/exec';
+    const TOKEN = 'Forgive1988@';
+    function formatNaira(amount) {
+      if(!amount || isNaN(amount)) return '₦0';
+      return '₦' + Number(amount).toLocaleString();
+    }
+    function getIdFromName(name) {
+      return ('price-' + name)
+        .normalize("NFD").replace(/[̀-ͯ]/g, "")
+        .replace(/[^a-z0-9]/gi,'-')
+        .replace(/-+/g,'-')
+        .toLowerCase().replace(/-$/, '');
+    }
+    function getCardIdFromName(name) {
+      return ('card-' + name)
+        .normalize("NFD").replace(/[̀-ͯ]/g, "")
+        .replace(/[^a-z0-9]/gi,'-')
+        .replace(/-+/g,'-')
+        .toLowerCase().replace(/-$/, '');
+    }
+    function injectPrices() {
+      fetch(`${ENDPOINT}?token=${TOKEN}`)
+        .then(res => res.json())
+        .then(result => {
+          if(result.ok) {
+            result.rows.forEach(item => {
+              if(item.name) {
+                let priceId = getIdFromName(item.name);
+                let cardId = getCardIdFromName(item.name);
+                let priceElem = document.getElementById(priceId);
+                let cardElem = document.getElementById(cardId);
+                if(priceElem && cardElem) {
+                  priceElem.innerHTML = '';
+                  cardElem.classList.remove('soldout');
+                  if(item.available === true) {
+                    priceElem.textContent = formatNaira(item.price);
+                  } else {
+                    priceElem.innerHTML = `${formatNaira(item.price)} <span class="soldout-label">Sold Out</span>`;
+                    cardElem.classList.add('soldout');
+                  }
+                }
+              }
+            });
+          }
+        });
+    }
+    document.addEventListener('DOMContentLoaded', injectPrices);
   </script>
 </body>
 </html>
