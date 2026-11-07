@@ -20,7 +20,27 @@
     .menu-toggle a:hover{ box-shadow:0 0 10px rgba(232,193,49,.22); }
     .menu-toggle a:active{ transform:scale(.98); box-shadow:inset 0 -2px 0 var(--gold-mid),0 0 10px rgba(232,193,49,.45); }
     .menu-toggle .label-main{ display:block; font-size:0.95rem; line-height:1; }
-    .food-grid .food-card.grouped{ order:-1; }
+    .price-panel{
+      max-width:560px; margin:0 auto 5rem; padding:0 16px;
+    }
+    .price-panel img{
+      width:100%; height:240px; object-fit:cover; display:block;
+      border-radius:12px 12px 0 0;
+    }
+    .price-list{
+      list-style:none; margin:0; padding:.4rem 1.1rem 1rem;
+      background:#1a1a1a; border-radius:0 0 12px 12px;
+    }
+    .price-list li{
+      display:flex; align-items:baseline; gap:.5rem;
+      padding:.75rem 0; border-bottom:1px solid var(--border);
+      font-size:1rem; color:var(--text);
+    }
+    .price-list li:last-child{ border-bottom:0; }
+    .price-list .name{ font-weight:700; }
+    .price-list .dots{ flex:1; border-bottom:1px dotted rgba(255,255,255,.25); transform:translateY(-4px); }
+    .price-list .price{ font-weight:800; white-space:nowrap; color:var(--gold-solid); }
+    .price-list li.soldout{ opacity:.48; }
     .soldout-label {
       color: #fff;
       background: #d91e1e;
@@ -32,7 +52,6 @@
       vertical-align: middle;
       display: inline-block;
     }
-    .food-card.soldout { opacity: 0.48; }
   </style>
 </head>
 <body>
@@ -49,63 +68,19 @@
       <h3 id="beers-title" class="hero-title" style="text-align:center; margin:0 0 1rem;">
         Beers / Stouts
       </h3>
-      <div class="food-grid">
-        <div class="food-card grouped" id="card-big-beers-stouts">
-          <img src="images/obiri-beer-big.jpg" alt="All Big Beers & Stouts" />
-          <div class="food-info">
-            <h4>Big Beers / Stouts</h4>
-            <p id="price-big-beers-stouts"></p>
-          </div>
-        </div>
-        <div class="food-card grouped" id="card-small-beers-stouts">
-          <img src="images/obiri-beer-small.jpg" alt="All Small Beers & Stouts" />
-          <div class="food-info">
-            <h4>Small Beers / Stouts</h4>
-            <p id="price-small-beers-stouts"></p>
-          </div>
-        </div>
-        <div class="food-card" id="card-star-radler">
-          <img src="images/obiri-star-radler.jpg" alt="Star Radler" />
-          <div class="food-info">
-            <h4>Star Radler</h4>
-            <p id="price-star-radler"></p>
-          </div>
-        </div>
-        <div class="food-card" id="card-desperados">
-          <img src="images/obiri-desperados.jpg" alt="Desperados" />
-          <div class="food-info">
-            <h4>Desperados</h4>
-            <p id="price-desperados"></p>
-          </div>
-        </div>
-        <div class="food-card" id="card-flying-fish">
-          <img src="images/obiri-flying-fish.jpg" alt="Flying Fish" />
-          <div class="food-info">
-            <h4>Flying Fish</h4>
-            <p id="price-flying-fish"></p>
-          </div>
-        </div>
-        <div class="food-card" id="card-legend-twist">
-          <img src="images/obiri-legend-twist.jpg" alt="Legend Twist" />
-          <div class="food-info">
-            <h4>Legend Twist</h4>
-            <p id="price-legend-twist"></p>
-          </div>
-        </div>
-        <div class="food-card" id="card-smirnoff-ice-small">
-          <img src="images/obiri-smirnoff-small.jpg" alt="Smirnoff Ice (Small)" />
-          <div class="food-info">
-            <h4>Smirnoff Ice (Small)</h4>
-            <p id="price-smirnoff-ice-small"></p>
-          </div>
-        </div>
-        <div class="food-card" id="card-smirnoff-ice-double-black">
-          <img src="images/obiri-smirnoff-double-black.jpg" alt="Smirnoff Ice (Double Black)" />
-          <div class="food-info">
-            <h4>Smirnoff Ice (Double Black)</h4>
-            <p id="price-smirnoff-ice-double-black"></p>
-          </div>
-        </div>
+      <div class="price-panel">
+        <img src="images/beers-stouts.jpg" alt="Beers, stouts and Smirnoff Ice" />
+        <ul class="price-list">
+          <li id="card-big-heineken"><span class="name">Big Heineken</span><span class="dots"></span><span class="price" id="price-big-heineken">—</span></li>
+          <li id="card-big-stout"><span class="name">Big Stout</span><span class="dots"></span><span class="price" id="price-big-stout">—</span></li>
+          <li id="card-big-smirnoff-ice"><span class="name">Big Smirnoff Ice</span><span class="dots"></span><span class="price" id="price-big-smirnoff-ice">—</span></li>
+          <li id="card-smirnoff-ice-double-black"><span class="name">Smirnoff Double Black</span><span class="dots"></span><span class="price" id="price-smirnoff-ice-double-black">—</span></li>
+          <li id="card-smirnoff-ice-small"><span class="name">Smirnoff Ice (Small)</span><span class="dots"></span><span class="price" id="price-smirnoff-ice-small">—</span></li>
+          <li id="card-star-radler"><span class="name">Star Radler</span><span class="dots"></span><span class="price" id="price-star-radler">—</span></li>
+          <li id="card-desperados"><span class="name">Desperados</span><span class="dots"></span><span class="price" id="price-desperados">—</span></li>
+          <li id="card-flying-fish"><span class="name">Flying Fish</span><span class="dots"></span><span class="price" id="price-flying-fish">—</span></li>
+          <li id="card-legend-twist"><span class="name">Legend Twist</span><span class="dots"></span><span class="price" id="price-legend-twist">—</span></li>
+        </ul>
       </div>
     </section>
     <div class="tray-note">Takeout ₦500</div>
